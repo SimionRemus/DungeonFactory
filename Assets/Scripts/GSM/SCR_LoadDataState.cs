@@ -5,13 +5,13 @@ using UnityEngine;
 public class SCR_LoadDataState : IState
 {
     //Write attributes/properties here
-    private SCR_ActualSM stateMachine;
+    private SCR_GameSM stateMachine;
 
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
-    public SCR_LoadDataState(SCR_ActualSM SM)
+    public SCR_LoadDataState(SCR_GameSM SM)
     {
         stateMachine = SM;
     }

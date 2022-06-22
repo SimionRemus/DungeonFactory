@@ -6,7 +6,7 @@ using UnityEngine;
 public class SCR_ActualSM : SCR_GameSM
 {
     #region States definition
-    public SCR_MainMenuStates MainMenuState;// = new SCR_MainMenuStates();
+        public SCR_MainMenuStates MainMenuState;
         public SCR_SettingsState SettingsState;
         public SCR_ShowCreditsState ShowCreditsState;
         public SCR_CastSpellState CastSpellState;
@@ -23,5 +23,7 @@ public class SCR_ActualSM : SCR_GameSM
         public SCR_VictoryState VictoryState;
     #endregion
 
-    
+
+
+
 }

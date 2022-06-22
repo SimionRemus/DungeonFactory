@@ -5,13 +5,13 @@ using UnityEngine;
 public class SCR_MainMenuStates : IState
 {
     //Write attributes/properties here
-    private SCR_ActualSM stateMachine;
+    private SCR_GameSM stateMachine;
 
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
-    public SCR_MainMenuStates(SCR_ActualSM SM)
+    public SCR_MainMenuStates(SCR_GameSM SM)
     {
         stateMachine = SM;
     }
