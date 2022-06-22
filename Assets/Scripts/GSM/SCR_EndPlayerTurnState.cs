@@ -1,0 +1,33 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SCR_EndPlayerTurnState : IState
+{
+    //Write attributes/properties here
+
+
+
+    /// <summary>
+    /// Constructor of state. Passes needed parameters into the state.
+    /// </summary>
+    public SCR_EndPlayerTurnState()
+    {
+
+    }
+
+    void IState.OnEnter()
+    {
+        Debug.Log("Ending player turn");
+    }
+
+    void IState.OnExit()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IState.OnUpdate()
+    {
+        throw new System.NotImplementedException();
+    }
+}

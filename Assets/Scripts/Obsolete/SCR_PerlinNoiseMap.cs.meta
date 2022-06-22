@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6ceaee3b122e7dc4981d73b9d58bdd27
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - prefab_lava: {fileID: 7089038138536389081, guid: bade9d78730b5164eb5848c64177cf88, type: 3}
+  - prefab_water: {fileID: 7682767440429726303, guid: 1a57e684826e90c43a8770a3e68800a7, type: 3}
+  - prefab_grass: {fileID: 6565201293805168874, guid: 41e1ef88dc099e74288c3143dedeaf46, type: 3}
+  - prefab_snow: {fileID: 6298924887001741950, guid: d1eb45c1a47ffac4e86e30e13b335762, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
