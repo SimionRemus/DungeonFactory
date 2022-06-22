@@ -5,15 +5,15 @@ using UnityEngine;
 public class SCR_SaveDataState : IState
 {
     //Write attributes/properties here
-
+    private SCR_ActualSM stateMachine;
 
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
-    public SCR_SaveDataState()
+    public SCR_SaveDataState(SCR_ActualSM SM)
     {
-
+        stateMachine = SM;
     }
 
     void IState.OnEnter()
