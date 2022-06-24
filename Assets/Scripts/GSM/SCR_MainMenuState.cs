@@ -19,11 +19,12 @@ public class SCR_MainMenuStates : IState
     void IState.OnEnter()
     {
         Debug.Log("Game started");
+        //Should load MainMenuUI
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        //Should unload MainMenuUI
     }
 
     void IState.OnUpdate()
