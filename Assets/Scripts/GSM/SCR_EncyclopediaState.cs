@@ -19,15 +19,22 @@ public class SCR_EncyclopediaState : IState
     void IState.OnEnter()
     {
         Debug.Log("Encyclopedia clicked");
+        //Show EncyclopediaUI
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        //Hide EncyclopediaUI
     }
 
     void IState.OnUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Change state MainMenu (Main Menu)
+            stateMachine.ChangeState(stateMachine.MainMenuState)
+            return;
+        }
         Debug.Log("Showing Encyclopedia here");
     }
 }
