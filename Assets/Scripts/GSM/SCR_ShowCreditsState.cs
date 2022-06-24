@@ -19,15 +19,22 @@ public class SCR_ShowCreditsState :IState
     void IState.OnEnter()
     {
         Debug.Log("Show credits clicked");
+        //Load and show credits as video or marching text or whatever
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        //Unload or hide anything needed in this state.
     }
 
     void IState.OnUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Change state MainMenu (Main Menu)
+            stateMachine.ChangeState(stateMachine.MainMenuState)
+            return;
+        }
         Debug.Log("Showing credits");
     }
 }
