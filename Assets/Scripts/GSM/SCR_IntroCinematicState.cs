@@ -19,15 +19,22 @@ public class SCR_IntroCinematicState : IState
     void IState.OnEnter()
     {
         Debug.Log("Entering Intro Cinematic");
+        //Show intro cinematic for new game
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        //Unload/hide anything from the cinematic, if needed
     }
 
     void IState.OnUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Change state MainMenu (Main Menu)
+            stateMachine.ChangeState(stateMachine.MainMenuState)
+            return;
+        }
         Debug.Log("Showing Intro Cinematics here");
     }
 }
