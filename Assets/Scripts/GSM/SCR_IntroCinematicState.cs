@@ -32,7 +32,7 @@ public class SCR_IntroCinematicState : IState
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             // Change state MainMenu (Main Menu)
-            stateMachine.ChangeState(stateMachine.MainMenuState)
+            stateMachine.ChangeState(stateMachine.MainMenuState);
             return;
         }
         Debug.Log("Showing Intro Cinematics here");

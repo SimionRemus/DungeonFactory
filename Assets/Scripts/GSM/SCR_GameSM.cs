@@ -25,6 +25,9 @@ public class SCR_GameSM : MonoBehaviour
     public SCR_VictoryState VictoryState;
     #endregion
 
+    [SerializeField] public Canvas MainMenuUI;
+    [SerializeField] public Canvas GameUI;
+    [SerializeField] public Canvas CardDetailsUI;
     public void Start()
     {
         #region State initialization
@@ -44,7 +47,7 @@ public class SCR_GameSM : MonoBehaviour
         UpgradeSpellState = new SCR_UpgradeSpellState(this);
         VictoryState = new SCR_VictoryState(this);
         #endregion
-        currentState = MainMenuState;
+        ChangeState(MainMenuState);
     }
 
     public void ChangeState(IState newState)
