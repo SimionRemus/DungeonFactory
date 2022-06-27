@@ -26,6 +26,7 @@ public class SCR_GameSM : MonoBehaviour
     #endregion
 
     [SerializeField] public Canvas MainMenuUI;
+    [SerializeField] public Canvas SettingsUI;
     [SerializeField] public Canvas GameUI;
     [SerializeField] public Canvas CardDetailsUI;
     public void Start()

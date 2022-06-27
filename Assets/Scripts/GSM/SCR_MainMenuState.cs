@@ -25,6 +25,7 @@ public class SCR_MainMenuStates : IState
     void IState.OnEnter()
     {
         stateMachine.MainMenuUI.enabled = true;
+        stateMachine.SettingsUI.enabled = false;
         stateMachine.GameUI.enabled = false;
         stateMachine.CardDetailsUI.enabled = false;
         Debug.Log("Game started");

@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SCR_SettingsState : IState
 {
     //Write attributes/properties here
     private SCR_GameSM stateMachine;
-
+    public Button Return;
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
@@ -18,16 +20,32 @@ public class SCR_SettingsState : IState
 
     void IState.OnEnter()
     {
-        Debug.Log("Settings clicked");
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = true;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+
+        Return = stateMachine.SettingsUI.transform.Find("Return").GetComponent<Button>();
+        Return.onClick.AddListener(ReturnClicked);
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+
+        Return.onClick.RemoveListener(ReturnClicked);
     }
 
     void IState.OnUpdate()
     {
-        Debug.Log("Showing Settings here");
+        //do nothing yet
+    }
+
+    private void ReturnClicked()
+    {
+        stateMachine.ChangeState(stateMachine.MainMenuState);
     }
 }
