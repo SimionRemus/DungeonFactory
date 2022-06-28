@@ -18,16 +18,32 @@ public class SCR_PlayerTurnIdleState : IState
 
     void IState.OnEnter()
     {
-        throw new System.NotImplementedException();
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = true;
+        stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
     }
 
     void IState.OnUpdate()
     {
-        Debug.Log("Showing Settings here");
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Change state MainMenu (Main Menu)
+            Debug.Log("Pressed escape. returning to main menu. This is for debug purposes only!!!");
+            stateMachine.ChangeState(stateMachine.MainMenuState);
+            return;
+        }
     }
 }

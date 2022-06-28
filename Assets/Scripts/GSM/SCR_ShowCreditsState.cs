@@ -18,13 +18,23 @@ public class SCR_ShowCreditsState :IState
 
     void IState.OnEnter()
     {
-        Debug.Log("Show credits clicked");
-        //Load and show credits as video or marching text or whatever
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = true;
+        stateMachine.CreditsUI.transform.Find("credits").GetComponent<Animator>().Play("creditsAnim",-1,0.0f);
+        stateMachine.IntroCinematics.enabled = false;
     }
 
     void IState.OnExit()
     {
-        //Unload or hide anything needed in this state.
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
     }
 
     void IState.OnUpdate()

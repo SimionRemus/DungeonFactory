@@ -24,6 +24,8 @@ public class SCR_SettingsState : IState
         stateMachine.SettingsUI.enabled = true;
         stateMachine.GameUI.enabled = false;
         stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
 
         Return = stateMachine.SettingsUI.transform.Find("Return").GetComponent<Button>();
         Return.onClick.AddListener(ReturnClicked);
@@ -35,6 +37,8 @@ public class SCR_SettingsState : IState
         stateMachine.SettingsUI.enabled = false;
         stateMachine.GameUI.enabled = false;
         stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
 
         Return.onClick.RemoveListener(ReturnClicked);
     }

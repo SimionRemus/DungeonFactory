@@ -29,6 +29,8 @@ public class SCR_GameSM : MonoBehaviour
     [SerializeField] public Canvas SettingsUI;
     [SerializeField] public Canvas GameUI;
     [SerializeField] public Canvas CardDetailsUI;
+    [SerializeField] public Canvas CreditsUI;
+    [SerializeField] public Canvas IntroCinematics;
     public void Start()
     {
         #region State initialization

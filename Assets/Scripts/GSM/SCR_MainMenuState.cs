@@ -28,6 +28,9 @@ public class SCR_MainMenuStates : IState
         stateMachine.SettingsUI.enabled = false;
         stateMachine.GameUI.enabled = false;
         stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
+
         Debug.Log("Game started");
         //Buttons assigned
         ContinueGame = stateMachine.MainMenuUI.transform.Find("ContinueGame").GetComponent<Button>();
@@ -51,8 +54,11 @@ public class SCR_MainMenuStates : IState
     void IState.OnExit()
     {
         stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
         stateMachine.GameUI.enabled = false;
         stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
 
         ContinueGame.onClick.RemoveListener(ContGameClicked);
         NewGame.onClick.RemoveListener(NewGameClicked);

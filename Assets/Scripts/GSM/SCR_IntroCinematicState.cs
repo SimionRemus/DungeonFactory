@@ -19,23 +19,29 @@ public class SCR_IntroCinematicState : IState
     void IState.OnEnter()
     {
         Debug.Log("Entering Intro Cinematic");
-        //Show intro cinematic for new game
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = true;
     }
 
     void IState.OnExit()
     {
-        //Unload/hide anything from the cinematic, if needed
+        stateMachine.MainMenuUI.enabled = false;
+        stateMachine.SettingsUI.enabled = false;
+        stateMachine.GameUI.enabled = false;
+        stateMachine.CardDetailsUI.enabled = false;
+        stateMachine.CreditsUI.enabled = false;
+        stateMachine.IntroCinematics.enabled = false;
     }
 
     void IState.OnUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            // Change state MainMenu (Main Menu)
-            stateMachine.ChangeState(stateMachine.MainMenuState);
-            return;
-        }
-        Debug.Log("Showing Intro Cinematics here");
+        //running cinematic video then going into new game
+        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
+
     }
 }
 
