@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class SCR_Player : MonoBehaviour
 {
+    #region movement attributes
     public Transform movePoint;
     public float moveSpeed = 5f;
     public GameObject cam;
-
     public LayerMask whatStopsMovement;
-
     private float prevDirection = 1f;
+    #endregion
+    #region infusion slots
+    public elementType[] infusionslots;
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
         movePoint.parent = null;
+        infusionslots = new elementType[7];
     }
 
     // Update is called once per frame
