@@ -16,6 +16,7 @@ MonoBehaviour:
   cardCost: 0
   cardDescription: Just burn the whole world down, man!
   cardName: Torch EVERYTHING
+  color: {r: 0.6132076, g: 0, b: 0, a: 1}
   mandatoryElements: 02000000
   optionalElements: 
   forbiddenElements: 01000000

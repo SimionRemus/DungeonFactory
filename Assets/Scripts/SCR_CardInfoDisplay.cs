@@ -10,6 +10,7 @@ public class SCR_CardInfoDisplay : MonoBehaviour
     public Image Artwork;
     public Text cardDescription;
     public Text cardName;
+    public Image cardBody;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,8 @@ public class SCR_CardInfoDisplay : MonoBehaviour
             cardDescription.text = SpellCard.cardDescription;
             cardName.text = SpellCard.cardName;
             Artwork.sprite = SpellCard.cardImage;
+            if(SpellCard.color!=null)
+                cardBody.GetComponent<Image>().color = SpellCard.color;
         }
     }
 

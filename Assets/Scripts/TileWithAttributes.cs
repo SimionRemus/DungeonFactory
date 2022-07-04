@@ -11,6 +11,7 @@ public class TileWithAttributes : Tile
 {
     public string tileName;
     public int tileIndex;
+    public elementType element;
 
 
 #if UNITY_EDITOR
