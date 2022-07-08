@@ -53,6 +53,6 @@ public class SCR_Player : MonoBehaviour
     public void SetCamera()
     {
 
-        cam.transform.position = this.transform.position + new Vector3(0, 0, -9);
+        cam.transform.position = this.transform.position + new Vector3(0, 0, -10);
     }
 }

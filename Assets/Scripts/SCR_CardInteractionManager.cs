@@ -15,6 +15,9 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
 
     private IEnumerator popUpCard;
     private GameObject prevGO=null;
+    private int cardCount;
+    private Transform actionList;
+
 
     private void Start()
     {
@@ -23,7 +26,6 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
         {
             if (ui.ToString().Split(' ')[0].Equals("CardDetailsUI"))
             {
-                Debug.Log("true");
                 CardDetailsUI = ui.GetComponent<Canvas>();
             }
             if (ui.ToString().Split(' ')[0].Equals("GameUI"))
@@ -37,6 +39,39 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
             if (ui.ToString().Split(' ')[0].Equals("CardSelectionBox"))
             {
                 SelectionBox = ui.GetComponent<Image>();
+            }
+        }
+        actionList = GameMenu.transform.Find("ActionList");
+        cardCount = actionList.childCount;
+        for (int i = 0; i < cardCount; i++)
+        {
+            var mandatoryElement = actionList.GetChild(i).GetComponent<SCR_CardInfoDisplay>().SpellCard.mandatoryElement;
+            switch (mandatoryElement)
+            {
+                case elementType.None:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xB0, 0xB0, 0xB0, 0xFF);
+                    break;
+                case elementType.Earth:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xA2, 0x70, 0x40, 0xFF);
+                    break;
+                case elementType.Water:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0x70, 0x90, 0xD0, 0xFF);
+                    break;
+                case elementType.Fire:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xAB, 0x30, 0x00, 0xFF);
+                    break;
+                case elementType.Air:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xFC, 0xFF, 0xD0, 0xFF);
+                    break;
+                case elementType.Divination:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0x0C, 0xA0, 0xA0, 0xFF);
+                    break;
+                case elementType.Illusion:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xFF, 0xA0, 0x50, 0xFF);
+                    break;
+                case elementType.Life:
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0x18, 0x70, 0x00, 0xFF);
+                    break;
             }
         }
     }
@@ -56,7 +91,7 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
                 CardDisplay.GetComponent<SCR_CardInfoDisplay>().cardDescription.text = CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardDescription;
                 CardDisplay.GetComponent<SCR_CardInfoDisplay>().cardName.text = CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardName;
                 CardDisplay.GetComponent<SCR_CardInfoDisplay>().Artwork.sprite = CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardImage;
-                CardDisplay.GetComponent<SCR_CardInfoDisplay>().cardBody.color = CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard.color;
+                CardDisplay.transform.GetChild(0).GetComponent<Image>().color = itemBeingSelected.transform.GetChild(0).GetComponent<Image>().color;
             }
             popUpCard = DoPopUP();
             StartCoroutine(popUpCard);

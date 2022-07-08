@@ -9,8 +9,7 @@ public class SO_Spell : ScriptableObject
     public int cardCost;
     public string cardDescription;
     public string cardName;
-    public Color color;
-    [SerializeField] elementType[] mandatoryElements;
+    public elementType mandatoryElement;
     [SerializeField] elementType[] optionalElements;
     [SerializeField] elementType[] forbiddenElements;
 }
