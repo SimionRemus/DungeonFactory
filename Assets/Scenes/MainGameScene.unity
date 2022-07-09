@@ -2097,6 +2097,7 @@ MonoBehaviour:
   CardDetailsUI: {fileID: 440082893}
   CreditsUI: {fileID: 1195269431}
   IntroCinematics: {fileID: 333200903}
+  grid: {fileID: 512347302}
 --- !u!1 &363480554
 GameObject:
   m_ObjectHideFlags: 0
@@ -2914,12 +2915,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefabs:
   - {fileID: 11400000, guid: ab108bea6d24a184984938b0e226c9a8, type: 2}
-  - {fileID: 11400000, guid: 91d81e6a343c6654087f084dd502f5c7, type: 2}
-  - {fileID: 11400000, guid: d8c62c59cb25c0a4da55646ab7e472d0, type: 2}
-  - {fileID: 11400000, guid: 6fdbc418897b80d42ba1ec5d980b2b99, type: 2}
-  - {fileID: 11400000, guid: f7f7e5d85c10a0e4bbb0d873c7f9729f, type: 2}
   - {fileID: 11400000, guid: 8e07e90507f15884493969dea550d977, type: 2}
   - {fileID: 11400000, guid: d4c2eec3b13d1644da864da0a1d8fe5a, type: 2}
+  - {fileID: 11400000, guid: 6fdbc418897b80d42ba1ec5d980b2b99, type: 2}
+  - {fileID: 11400000, guid: 91d81e6a343c6654087f084dd502f5c7, type: 2}
+  - {fileID: 11400000, guid: f7f7e5d85c10a0e4bbb0d873c7f9729f, type: 2}
+  - {fileID: 11400000, guid: d8c62c59cb25c0a4da55646ab7e472d0, type: 2}
   wallPrefab: {fileID: 11400000, guid: 014d19520c8f2dd43bf37ef540c061c7, type: 2}
   groundTilemap: {fileID: 1365329849}
   wallTilemap: {fileID: 799996427}
@@ -5822,13 +5823,13 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956839887}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.5, y: 0.5}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5893,7 +5894,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:

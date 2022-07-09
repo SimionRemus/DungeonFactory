@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class SCR_GameSM : MonoBehaviour
 {
     public IState currentState;
     bool intransition = false;
+   
 
     #region States definition
     public SCR_MainMenuStates MainMenuState;
@@ -32,6 +34,8 @@ public class SCR_GameSM : MonoBehaviour
     [SerializeField] public Canvas CardDetailsUI;
     [SerializeField] public Canvas CreditsUI;
     [SerializeField] public Canvas IntroCinematics;
+
+    [SerializeField] public Grid grid;
 
     public void Start()
     {
