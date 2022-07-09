@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SCR_GameSM : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class SCR_GameSM : MonoBehaviour
     [SerializeField] public Canvas CardDetailsUI;
     [SerializeField] public Canvas CreditsUI;
     [SerializeField] public Canvas IntroCinematics;
+
     public void Start()
     {
         #region State initialization

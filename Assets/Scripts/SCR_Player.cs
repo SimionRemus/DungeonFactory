@@ -53,6 +53,47 @@ public class SCR_Player : MonoBehaviour
     public void SetCamera()
     {
 
-        cam.transform.position = this.transform.position + new Vector3(0, 0, -10);
+        cam.transform.position = this.transform.position + new Vector3(0, -2, -10);
+    }
+
+    public void GetNewInfusionElement(elementType element)
+    {
+        switch (element)
+        {
+            case elementType.None:
+                Debug.Log("This should not have happened!");
+                break;
+            case elementType.Earth:
+                infusionslots[0] = element;
+                break;
+            case elementType.Water:
+                infusionslots[1] = element;
+                break;
+            case elementType.Fire:
+                infusionslots[2] = element;
+                break;
+            case elementType.Air:
+                infusionslots[3] = element;
+                break;
+            case elementType.Divination:
+                infusionslots[4] = element;
+                break;
+            case elementType.Illusion:
+                infusionslots[5] = element;
+                break;
+            case elementType.Life:
+                infusionslots[6] = element;
+                break;
+        }
+    }
+
+    public void RotateSlots()
+    {
+        elementType auxElem = infusionslots[0];
+        for (int i = 0; i < 6; i++)
+        {
+            infusionslots[i] = infusionslots[i + 1];
+        }
+        infusionslots[6] = auxElem;
     }
 }

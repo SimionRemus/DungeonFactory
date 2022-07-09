@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
-  m_Name: Card
+  m_Name: IllusionCardTest
   m_EditorClassIdentifier: 
-  cardImage: {fileID: 21300000, guid: 9b5494ebbbddb0c4ca6b8ecb02514226, type: 3}
+  cardImage: {fileID: 0}
   cardCost: 0
-  cardDescription: Just burn the whole world down, man!
-  cardName: Torch EVERYTHING
-  mandatoryElement: 3
+  cardDescription: This is an illusion card test
+  cardName: IllusionCardTest
+  mandatoryElement: 6
   optionalElements: 
-  forbiddenElements: 00000000
+  forbiddenElements: 

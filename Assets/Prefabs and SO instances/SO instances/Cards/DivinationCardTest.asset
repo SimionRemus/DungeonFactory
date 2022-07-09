@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
-  m_Name: LifeCardTest
+  m_Name: DivinationCardTest
   m_EditorClassIdentifier: 
   cardImage: {fileID: 0}
   cardCost: 0
-  cardDescription: RandomText
-  cardName: Life Card Test
-  color: {r: 0, g: 0, b: 0, a: 0}
-  mandatoryElement: 7
+  cardDescription: This is a divination card test
+  cardName: DivinationCardTest
+  mandatoryElement: 5
   optionalElements: 
   forbiddenElements: 

@@ -12,15 +12,32 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
     [SerializeField] private Canvas CardDetailsUI;
     [SerializeField] private Canvas GameMenu;
     [SerializeField] private Image SelectionBox;
+    [SerializeField] private Image SelectionBoxSB;
 
     private IEnumerator popUpCard;
     private GameObject prevGO=null;
     private int cardCount;
     private Transform actionList;
+    private Transform spellBook;
+
+    #region ColorDefinition
+    Color Earth, Water, Air, Fire, Divination, Illusion, Life, NoElement;
+    #endregion
 
 
     private void Start()
     {
+        #region ColorInstantiation
+        Earth= new Color32(0x85, 0x55, 0x30, 0xFF);
+        Water= new Color32(0x3E, 0x7B, 0xF4, 0xFF);
+        Air = new Color32(0xFC, 0xFF, 0xD0, 0xFF);
+        Fire = new Color32(0xAB, 0x30, 0x00, 0xFF);
+        Divination = new Color32(0x90, 0x00, 0xA0, 0xFF);
+        Illusion = new Color32(0xFF, 0xA0, 0x50, 0xFF);
+        Life = new Color32(0x18, 0x70, 0x00, 0xFF);
+        NoElement = new Color32(0x80, 0x80, 0x80, 0xFF);
+        #endregion
+        #region Get CardDetailsUI,GameUI and CardSelectionBox to use in OnPointerDown/UP
         var UIS = GameObject.FindGameObjectsWithTag("UIs");
         foreach (var ui in UIS)
         {
@@ -40,7 +57,13 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
             {
                 SelectionBox = ui.GetComponent<Image>();
             }
+            if (ui.ToString().Split(' ')[0].Equals("CardSelectionBoxSB"))
+            {
+                SelectionBoxSB = ui.GetComponent<Image>();
+            }
         }
+        #endregion
+        #region Add Color based on elements
         actionList = GameMenu.transform.Find("ActionList");
         cardCount = actionList.childCount;
         for (int i = 0; i < cardCount; i++)
@@ -49,31 +72,65 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
             switch (mandatoryElement)
             {
                 case elementType.None:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xB0, 0xB0, 0xB0, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = NoElement;
                     break;
                 case elementType.Earth:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xA2, 0x70, 0x40, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Earth;
                     break;
                 case elementType.Water:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0x70, 0x90, 0xD0, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Water;
                     break;
                 case elementType.Fire:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xAB, 0x30, 0x00, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Fire;
                     break;
                 case elementType.Air:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xFC, 0xFF, 0xD0, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Air;
                     break;
                 case elementType.Divination:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0x0C, 0xA0, 0xA0, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Divination;
                     break;
                 case elementType.Illusion:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0xFF, 0xA0, 0x50, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Illusion;
                     break;
                 case elementType.Life:
-                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color32(0x18, 0x70, 0x00, 0xFF);
+                    actionList.GetChild(i).GetChild(0).GetComponent<Image>().color = Life;
                     break;
             }
         }
+        spellBook = GameMenu.transform.Find("Spellbook");
+        cardCount = spellBook.childCount;
+        for (int i = 0; i < cardCount; i++)
+        {
+            var mandatoryElement = spellBook.GetChild(i).GetComponent<SCR_CardInfoDisplay>().SpellCard.mandatoryElement;
+            switch (mandatoryElement)
+            {
+                case elementType.None:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = NoElement;
+                    break;
+                case elementType.Earth:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Earth;
+                    break;
+                case elementType.Water:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Water;
+                    break;
+                case elementType.Fire:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Fire;
+                    break;
+                case elementType.Air:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Air;
+                    break;
+                case elementType.Divination:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Divination;
+                    break;
+                case elementType.Illusion:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Illusion;
+                    break;
+                case elementType.Life:
+                    spellBook.GetChild(i).GetChild(0).GetComponent<Image>().color = Life;
+                    break;
+            }
+        }
+        #endregion
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -81,9 +138,18 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
         if (itemBeingSelected == null || prevGO == itemBeingSelected)
         {
             itemBeingSelected = gameObject;
-            SelectionBox.enabled = true;
+            if (itemBeingSelected.transform.parent == actionList)
+            {
+                SelectionBox.enabled = true;
+                SelectionBox.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
+            }
+            else
+            {
+                SelectionBoxSB.enabled = true;
+                SelectionBoxSB.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
+            }
             prevGO = itemBeingSelected;
-            SelectionBox.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
+            //SelectionBox.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
             var CardDisplay = CardDetailsUI.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
             CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard = itemBeingSelected.GetComponent<SCR_CardInfoDisplay>().SpellCard;
             if (CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard != null)
@@ -99,6 +165,7 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
         else
         {
             SelectionBox.enabled = false;
+            SelectionBoxSB.enabled = false;
             itemBeingSelected = null;
             var CardDisplay = CardDetailsUI.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
             CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard = null;
@@ -110,7 +177,7 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
         }
     }
 
-    public void OnPointerUp(PointerEventData eventDat)
+    public void OnPointerUp(PointerEventData eventData)
     {
         if (popUpCard != null) 
         {
