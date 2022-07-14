@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SCR_EndPlayerTurnState : IState
+public class SCR_SpellBookSwapState : IState
 {
     //Write attributes/properties here
     private SCR_GameSM stateMachine;
@@ -11,19 +11,19 @@ public class SCR_EndPlayerTurnState : IState
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
-    public SCR_EndPlayerTurnState(SCR_GameSM SM)
+    public SCR_SpellBookSwapState(SCR_GameSM SM)
     {
         stateMachine = SM;
     }
 
     void IState.OnEnter()
     {
-        Debug.Log("Ending player turn");
+        Debug.Log("Opening spellbook");
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Closing spellbook");
     }
 
     void IState.OnUpdate()

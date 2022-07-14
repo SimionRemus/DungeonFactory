@@ -12,6 +12,7 @@ public class TileWithAttributes : Tile
     public string tileName;
     public int tileIndex;
     public elementType element;
+    public tileEffect tileEffect;
 
 
 #if UNITY_EDITOR
@@ -23,4 +24,30 @@ public class TileWithAttributes : Tile
         AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<TileWithAttributes>(), path);
     }
 #endif
+}
+
+public enum tileEffect
+{
+    None,
+    waterHalfEffect,
+    halfHealEffect,
+    healFiveIfPassed,
+    healToDamage,
+    useTorchIfPassed,
+    fireHalfEffect,
+    doubleWaterDamage,
+    doubleFireDamage,
+    doubleAirDamage,
+    doubleEarthDamage,
+    dmgFiveIfPassed,
+    dmgToHeal,
+    noTorchUsed,
+    halfSpeed,
+    doubleSpeed,
+    createWall,
+    halfExtraDmg,
+    dmgTenOnEOT,
+    lifeTwice,
+    lifeCancel,
+    healTenOnEOT
 }

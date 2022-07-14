@@ -26,6 +26,7 @@ public class SCR_GameSM : MonoBehaviour
     public SCR_SaveDataState SaveDataState;
     public SCR_UpgradeSpellState UpgradeSpellState;
     public SCR_VictoryState VictoryState;
+    public SCR_SpellBookSwapState SpellbookSwapState;
     #endregion
 
     [SerializeField] public Canvas MainMenuUI;
@@ -36,6 +37,7 @@ public class SCR_GameSM : MonoBehaviour
     [SerializeField] public Canvas IntroCinematics;
 
     [SerializeField] public Grid grid;
+    [SerializeField] public GameObject player;
 
     public void Start()
     {
@@ -55,6 +57,7 @@ public class SCR_GameSM : MonoBehaviour
         SaveDataState = new SCR_SaveDataState(this);
         UpgradeSpellState = new SCR_UpgradeSpellState(this);
         VictoryState = new SCR_VictoryState(this);
+        SpellbookSwapState = new SCR_SpellBookSwapState(this);
         #endregion
         ChangeState(MainMenuState);
     }

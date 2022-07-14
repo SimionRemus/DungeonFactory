@@ -12,6 +12,7 @@ public class SO_Spell : ScriptableObject
     public elementType mandatoryElement;
     [SerializeField] elementType[] optionalElements;
     [SerializeField] elementType[] forbiddenElements;
+    public tileOffset[] SpellRange;
 }
 
 public enum elementType
@@ -24,4 +25,11 @@ public enum elementType
     Divination,
     Illusion,
     Life
+}
+
+[System.Serializable]
+public struct tileOffset
+{
+    public int x;
+    public int y;
 }
