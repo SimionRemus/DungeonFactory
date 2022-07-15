@@ -11,10 +11,10 @@ public class SCR_CastSpellState : IState
 
     private Tilemap groundTilemap;
     private GameObject selectedCard;
-    private tileOffset[] spellRange;
-    private Vector3Int[] spellRangePositions; //used to remove spell range when nothing is selected.
+    private Vector2Int[] spellRange;
+    private Vector2Int[] spellRangePositions; //used to remove spell range when nothing is selected.
     private bool tileEffectApplied;
-
+    
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
@@ -33,7 +33,7 @@ public class SCR_CastSpellState : IState
         stateMachine.IntroCinematics.enabled = false;
 
         groundTilemap = stateMachine.grid.transform.Find("GroundTilemap").GetComponent<Tilemap>();
-        spellRangePositions = new Vector3Int[25];
+        spellRangePositions = new Vector2Int[25];
         tileEffectApplied = false;
         Debug.Log("entered cast spell");
     }
@@ -46,6 +46,9 @@ public class SCR_CastSpellState : IState
         stateMachine.CardDetailsUI.enabled = false;
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = false;
+
+        
+
         Debug.Log("exiting cast spell");
     }
 
@@ -64,16 +67,15 @@ public class SCR_CastSpellState : IState
                     selectedCard = currentCard.gameObject;
 
                     Vector3 playerPos = groundTilemap.WorldToCell(stateMachine.player.transform.position);
-                    Vector3Int playerTilePos = new Vector3Int((int)playerPos.x, (int)playerPos.y, 0);
-                    TileWithAttributes playerTile = (TileWithAttributes)groundTilemap.GetTile(playerTilePos);
+                    Vector2Int playerTilePos = new Vector2Int((int)playerPos.x, (int)playerPos.y);
                     spellRange = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.SpellRange;
                     for (int j = 0; j < spellRange.Length; j++)
                     {
-                        Vector3Int sRTPos = playerTilePos + new Vector3Int(spellRange[j].x, spellRange[j].y, 0);
+                        Vector2Int sRTPos = playerTilePos + new Vector2Int(spellRange[j].x, spellRange[j].y);
                         spellRangePositions[j] = sRTPos;
-                        groundTilemap.SetTileFlags(sRTPos, TileFlags.None);
-                        groundTilemap.SetColor(sRTPos, new Color32(100, 100, 255, 255));
-                        groundTilemap.SetTileFlags(sRTPos, TileFlags.LockAll);
+                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.None);
+                        groundTilemap.SetColor(new Vector3Int(sRTPos.x, sRTPos.y, 0), new Color32(100, 100, 255, 255));
+                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.LockAll);
                     }
                 }
             }
@@ -99,13 +101,7 @@ public class SCR_CastSpellState : IState
                     {
                         AffectUnitOnTile(collider.gameObject);
                     }
-                    //disable spell for this turn and then EXIT the state
-                    Image targetCard = stateMachine.transform.Find("Canvas").Find("cardUsed").GetComponent<Image>();
-                    Image usedCard = GameObject.Instantiate(targetCard, selectedCard.transform.position, Quaternion.identity);
-                    usedCard.
-                    usedCard.transform.SetParent(stateMachine.GameUI.transform);
-                    usedCard.enabled = true;
-
+                    //EXIT the state
                     stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
                 }
             }
@@ -113,10 +109,10 @@ public class SCR_CastSpellState : IState
             {
                 for (int k = 0; k < spellRangePositions.Length; k++)
                 {
-                    groundTilemap.SetTileFlags(spellRangePositions[k], TileFlags.None);
-                    groundTilemap.SetColor(spellRangePositions[k], new Color32(255, 255, 255, 255));
-                    groundTilemap.SetTileFlags(spellRangePositions[k], TileFlags.LockAll);
-                    spellRangePositions[k] = new Vector3Int(0, 0, 0);
+                    groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
+                    groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
+                    groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
+                    spellRangePositions[k] = new Vector2Int(0, 0);
                 }
             }
         }
@@ -124,10 +120,10 @@ public class SCR_CastSpellState : IState
         {
             for (int k = 0; k < spellRangePositions.Length; k++)
             {
-                groundTilemap.SetTileFlags(spellRangePositions[k], TileFlags.None);
-                groundTilemap.SetColor(spellRangePositions[k], new Color32(255, 255, 255, 255));
-                groundTilemap.SetTileFlags(spellRangePositions[k], TileFlags.LockAll);
-                spellRangePositions[k] = new Vector3Int(0, 0, 0);
+                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
+                groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
+                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
+                spellRangePositions[k] = new Vector2Int(0, 0);
             }
         }
     }
@@ -150,7 +146,6 @@ public class SCR_CastSpellState : IState
                     case elementType.Water:
                         //Water healing and damage spells are halved on this tile this turn.
                         tile.tileEffect = tileEffect.waterHalfEffect;
-                        Debug.Log("HERE");
                         break;
                     case elementType.Fire:
                         //Fire healing and damage spells are halved on this tile this turn.
@@ -418,4 +413,6 @@ public class SCR_CastSpellState : IState
     {
         Debug.Log(gObject.name);
     }
+
+    
 }

@@ -11,10 +11,12 @@ public class SCR_PlayerTurnIdleState : IState
     private SCR_GameSM stateMachine;
     private Tilemap groundTilemap;
     private GameObject selectedCard;
-    private tileOffset[] spellRange;
-    private Vector3Int[] spellRangePositions; //used to remove spell range when nothing is selected.
+    private Vector2Int[] spellRange;
+    private Vector2Int[] spellRangePositions; //used to remove spell range when nothing is selected.
 
     public Button endTurn;
+    public Button spellbook;
+    public int newTurnWillpower;
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
@@ -34,11 +36,20 @@ public class SCR_PlayerTurnIdleState : IState
         stateMachine.IntroCinematics.enabled = false;
 
         groundTilemap = stateMachine.grid.transform.Find("GroundTilemap").GetComponent<Tilemap>();
-        spellRangePositions = new Vector3Int[25];
+        spellRangePositions = new Vector2Int[25];
 
 
         endTurn = stateMachine.GameUI.transform.Find("EndTurn").GetComponent<Button>();
         endTurn.onClick.AddListener(EndTurnClicked);
+
+        spellbook = stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Button>();
+        spellbook.onClick.AddListener(SpellbookClicked);
+
+        newTurnWillpower = 3;
+
+
+
+
     }
 
     void IState.OnExit()
@@ -52,17 +63,26 @@ public class SCR_PlayerTurnIdleState : IState
 
 
         endTurn.onClick.RemoveListener(EndTurnClicked);
+        spellbook.onClick.RemoveListener(SpellbookClicked);
     }
 
     void IState.OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        #region CheckForWinCondition
+        if (stateMachine.WINCONDITION)
         {
-            // Change state MainMenu (Main Menu)
-            Debug.Log("Pressed escape. returning to main menu. This is for debug purposes only!!!");
-            stateMachine.ChangeState(stateMachine.MainMenuState);
-            return;
+            stateMachine.ChangeState(stateMachine.VictoryState);
         }
+        #endregion
+        #region CheckForEventWherePlayerIs
+        Vector3 midpoint = groundTilemap.WorldToCell(stateMachine.player.transform.position) + new Vector3(0.5f, 0.5f, 0);
+        Collider2D collider = Physics2D.OverlapCircle(midpoint, 0.45f,2048);
+        if (collider)
+        {
+            stateMachine.ChangeState(stateMachine.DoEventTileState);
+        }
+        #endregion
+        #region CheckForSpellFired
         var cardSelectionBox = stateMachine.GameUI.transform.Find("CardSelectionBox").GetComponent<Image>();
         if (cardSelectionBox.enabled) 
         {
@@ -76,20 +96,19 @@ public class SCR_PlayerTurnIdleState : IState
                     selectedCard = currentCard.gameObject;
 
                     Vector3 playerPos = groundTilemap.WorldToCell(stateMachine.player.transform.position);
-                    Vector3Int playerTilePos = new Vector3Int((int)playerPos.x, (int)playerPos.y, 0);
-                    TileWithAttributes playerTile = (TileWithAttributes)groundTilemap.GetTile(playerTilePos);
+                    Vector2Int playerTilePos = new Vector2Int((int)playerPos.x, (int)playerPos.y);
                     spellRange = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.SpellRange;
                     for (int j = 0; j < spellRange.Length; j++)
                     {
-                        Vector3Int sRTPos = playerTilePos + new Vector3Int(spellRange[j].x, spellRange[j].y, 0);
+                        Vector2Int sRTPos = playerTilePos + new Vector2Int(spellRange[j].x, spellRange[j].y);
                         spellRangePositions[j] = sRTPos;
-                        groundTilemap.SetTileFlags(sRTPos, TileFlags.None);
-                        groundTilemap.SetColor(sRTPos, new Color32(100, 100, 255, 255));
-                        groundTilemap.SetTileFlags(sRTPos, TileFlags.LockAll);
+                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.None);
+                        groundTilemap.SetColor(new Vector3Int(sRTPos.x, sRTPos.y, 0), new Color32(100, 100, 255, 255));
+                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.LockAll);
                     }
                 }
             }
-            if (Input.GetMouseButtonDown(0)&& (!EventSystem.current.IsPointerOverGameObject()))
+            if (Input.GetMouseButtonDown(0)&& (!EventSystem.current.IsPointerOverGameObject())) //Clicked inside gamespace (i.e. a tile)
             {
                 Vector3 pos = groundTilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                 
@@ -98,7 +117,11 @@ public class SCR_PlayerTurnIdleState : IState
                 TileWithAttributes tileground = (TileWithAttributes)groundTilemap.GetTile(tilePos);
                 if (tileground != null)
                 {
-                    stateMachine.ChangeState(stateMachine.CastSpellState);
+                    if (ValidateSpell(tilePos))
+                    {
+                        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardCost;
+                        stateMachine.ChangeState(stateMachine.CastSpellState);
+                    }
                 }
             }
         }
@@ -106,18 +129,49 @@ public class SCR_PlayerTurnIdleState : IState
         {
             for (int k = 0; k < spellRangePositions.Length; k++)
             {
-                groundTilemap.SetTileFlags(spellRangePositions[k], TileFlags.None);
-                groundTilemap.SetColor(spellRangePositions[k], new Color32(255, 255, 255, 255));
-                groundTilemap.SetTileFlags(spellRangePositions[k], TileFlags.LockAll);
-                spellRangePositions[k] = new Vector3Int(0, 0, 0);
+                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
+                groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
+                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
+                spellRangePositions[k] = new Vector2Int(0, 0);
             }
         }
+        #endregion
     }
-    
+
 
 
     private void EndTurnClicked()
     {
+        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower = newTurnWillpower;
+        stateMachine.player.GetComponent<SCR_Player>().numberOfTorches -= 1;
         stateMachine.ChangeState(stateMachine.EndPlayerTurnState);
+    }
+
+    private void SpellbookClicked()
+    {
+        stateMachine.ChangeState(stateMachine.SpellbookSwapState);
+    }
+
+    private bool ValidateSpell(Vector3Int tilePos)
+    {
+
+        //Vector3 playerPos = groundTilemap.WorldToCell(stateMachine.player.transform.position);
+        //Vector2Int playerTilePos = new Vector2Int((int)playerPos.x, (int)playerPos.y);
+        Vector2Int tilepos2D = new Vector2Int(tilePos.x, tilePos.y);
+        SO_Spell spell = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard;
+        if (spell.cardCost > stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower)
+        {
+            return false;
+        }
+        for (int k = 0; k < spellRangePositions.Length; k++)
+        {
+            if (spellRangePositions[k] == tilepos2D)
+            {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 }

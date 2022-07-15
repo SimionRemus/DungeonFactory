@@ -23,12 +23,12 @@ public class SCR_EndPlayerTurnState : IState
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Ending enemy turn for debug purposes");
     }
 
     void IState.OnUpdate()
     {
-        throw new System.NotImplementedException();
+        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class SCR_DoEventTileState : IState
 {
@@ -23,11 +24,18 @@ public class SCR_DoEventTileState : IState
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        var groundTilemap = stateMachine.grid.transform.Find("GroundTilemap").GetComponent<Tilemap>();
+        Vector3 midpoint = groundTilemap.WorldToCell(stateMachine.player.transform.position) + new Vector3(0.5f, 0.5f, 0);
+        Collider2D collider = Physics2D.OverlapCircle(midpoint, 0.45f, 2048);
+        if (collider)
+        {
+            GameObject.Destroy(collider.gameObject);
+        }
+        Debug.Log("Event Finished");
     }
 
     void IState.OnUpdate()
     {
-        Debug.Log("Apply event");
+        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SCR_Player : MonoBehaviour
 {
@@ -11,8 +12,17 @@ public class SCR_Player : MonoBehaviour
     public LayerMask whatStopsMovement;
     private float prevDirection = 1f;
     #endregion
-    #region infusion slots
+    #region  Player Resources
     public elementType[] infusionslots;
+    public int numberOfTorches;
+    public int numberOfWillpower;
+    public int numberOfHitpoints;
+    [SerializeField]
+    private Text numberOfTorchesText;
+    [SerializeField]
+    private Text numberOfWillPowerText;
+    [SerializeField]
+    private Text numberOfHitpointsText;
     #endregion
 
     // Start is called before the first frame update
@@ -20,6 +30,9 @@ public class SCR_Player : MonoBehaviour
     {
         movePoint.parent = null;
         infusionslots = new elementType[7];
+        numberOfHitpoints = 100;
+        numberOfTorches = 30;
+        numberOfWillpower = 3;
     }
 
     // Update is called once per frame
@@ -27,26 +40,11 @@ public class SCR_Player : MonoBehaviour
     {
 
         SetCamera();
+        UpdateUI();
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
         if(Vector3.Distance(transform.position,movePoint.position)<=0.05f)
         {
-            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
-            {
-                
-                transform.Rotate(new Vector3(0, 1, 0), 180 * System.Convert.ToInt32(Input.GetAxisRaw("Horizontal") != prevDirection));
-                if (!Physics2D.OverlapCircle(movePoint.position+ new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f),0.1f))
-                {
-                    movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                }
-                prevDirection = Input.GetAxisRaw("Horizontal");
-            }
-            if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
-            {
-                if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), 0.1f))
-                {
-                    movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                }
-            }
+            DebugWASDMovement();
         }
     }
 
@@ -95,5 +93,33 @@ public class SCR_Player : MonoBehaviour
             infusionslots[i] = infusionslots[i + 1];
         }
         infusionslots[6] = auxElem;
+    }
+
+    private void DebugWASDMovement()
+    {
+        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        {
+
+            transform.Rotate(new Vector3(0, 1, 0), 180 * System.Convert.ToInt32(Input.GetAxisRaw("Horizontal") != prevDirection));
+            if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), 0.1f,1024))
+            {
+                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+            }
+            prevDirection = Input.GetAxisRaw("Horizontal");
+        }
+        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
+        {
+            if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), 0.1f, 1024))
+            {
+                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+            }
+        }
+    }
+
+    private void UpdateUI()
+    {
+        numberOfHitpointsText.text = numberOfHitpoints.ToString();
+        numberOfTorchesText.text = numberOfTorches.ToString();
+        numberOfWillPowerText.text = numberOfWillpower.ToString();
     }
 }

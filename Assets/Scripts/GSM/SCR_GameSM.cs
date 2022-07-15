@@ -8,6 +8,8 @@ public class SCR_GameSM : MonoBehaviour
 {
     public IState currentState;
     bool intransition = false;
+    public bool WINCONDITION = false;
+    public bool LOSECONDITION = false;
    
 
     #region States definition
