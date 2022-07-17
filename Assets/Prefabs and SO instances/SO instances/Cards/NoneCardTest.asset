@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
   m_Name: NoneCardTest
   m_EditorClassIdentifier: 
+  SpellID: 1
   cardImage: {fileID: 0}
   cardCost: 1
   cardDescription: This is a no element card test
   cardName: NoneCardTest
   mandatoryElement: 0
+  mandatoryElementAmount: 0
   optionalElements: 
   forbiddenElements: 
   SpellRange:

@@ -14,7 +14,10 @@ public class SCR_CastSpellState : IState
     private Vector2Int[] spellRange;
     private Vector2Int[] spellRangePositions; //used to remove spell range when nothing is selected.
     private bool tileEffectApplied;
-    
+
+
+    private Vector3Int tilePos;
+    private Vector3 pos;
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
@@ -36,6 +39,7 @@ public class SCR_CastSpellState : IState
         spellRangePositions = new Vector2Int[25];
         tileEffectApplied = false;
         Debug.Log("entered cast spell");
+        
     }
 
     void IState.OnExit()
@@ -46,7 +50,6 @@ public class SCR_CastSpellState : IState
         stateMachine.CardDetailsUI.enabled = false;
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = false;
-
         
 
         Debug.Log("exiting cast spell");
@@ -57,6 +60,7 @@ public class SCR_CastSpellState : IState
         var cardSelectionBox = stateMachine.GameUI.transform.Find("CardSelectionBox").GetComponent<Image>();
         if (cardSelectionBox.enabled)
         {
+
             GameObject actionlist = stateMachine.GameUI.transform.Find("ActionList").gameObject;
             int cardnumber = stateMachine.GameUI.transform.Find("ActionList").childCount;
             for (int i = 0; i < cardnumber; i++)
@@ -68,31 +72,29 @@ public class SCR_CastSpellState : IState
 
                     Vector3 playerPos = groundTilemap.WorldToCell(stateMachine.player.transform.position);
                     Vector2Int playerTilePos = new Vector2Int((int)playerPos.x, (int)playerPos.y);
-                    spellRange = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.SpellRange;
-                    for (int j = 0; j < spellRange.Length; j++)
-                    {
-                        Vector2Int sRTPos = playerTilePos + new Vector2Int(spellRange[j].x, spellRange[j].y);
-                        spellRangePositions[j] = sRTPos;
-                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.None);
-                        groundTilemap.SetColor(new Vector3Int(sRTPos.x, sRTPos.y, 0), new Color32(100, 100, 255, 255));
-                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.LockAll);
-                    }
+                    //spellRange = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.SpellRange;
+                    //for (int j = 0; j < spellRange.Length; j++)
+                    //{
+                    //    Vector2Int sRTPos = playerTilePos + new Vector2Int(spellRange[j].x, spellRange[j].y);
+                    //    spellRangePositions[j] = sRTPos;
+                    //    groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.None);
+                    //    groundTilemap.SetColor(new Vector3Int(sRTPos.x, sRTPos.y, 0), new Color32(100, 100, 255, 255));
+                    //    groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.LockAll);
+                    //}
                 }
             }
             if (!tileEffectApplied)
             {
                 tileEffectApplied = true;
-                Vector3 pos = groundTilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                Vector3Int tilePos = new Vector3Int((int)pos.x, (int)pos.y, 0);
+                pos = groundTilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                tilePos = new Vector3Int((int)pos.x, (int)pos.y, 0);
                 TileWithAttributes tileground = (TileWithAttributes)groundTilemap.GetTile(tilePos);
                 if (tileground != null)
                 {
-                    GameObject target = stateMachine.transform.Find("tileEffectSprite").gameObject;
-                    GameObject tileEffect = GameObject.Instantiate(target, pos + new Vector3(0.5f, 0.5f), Quaternion.identity);
-                    tileEffect.SetActive(true);
-
-                    //TO BE completed (all 7x7 possibilities)
-                    SpellEnvironmentalEffect(selectedCard, tilePos);
+                    //GameObject target = stateMachine.transform.Find("tileEffectSprite").gameObject;
+                    //GameObject tileEffect = GameObject.Instantiate(target, pos + new Vector3(0.5f, 0.5f), Quaternion.identity);
+                    //tileEffect.SetActive(true);
+                    //tileEffect.transform.SetParent(GameObject.Find("TileEffectContainer").transform);
 
                     //Check if anything is on tile:
                     Vector3 midpoint = groundTilemap.CellToWorld(tilePos) + new Vector3(0.5f, 0.5f, 0);
@@ -101,30 +103,29 @@ public class SCR_CastSpellState : IState
                     {
                         AffectUnitOnTile(collider.gameObject);
                     }
+                }
+            }
+            //TO BE completed (all 7x7 possibilities)
+            if (HasTheComponents())
+            {
+                
+                SpellEnvironmentalEffect(selectedCard, tilePos);
+                selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.DoSpellEffects(stateMachine.player, groundTilemap, stateMachine, tilePos);
+                var movepoint = GameObject.Find("Movepoint").transform.position;
+                var playerPos = stateMachine.player.transform.position;
+                playerPos = Vector3.MoveTowards(playerPos, movepoint, stateMachine.player.GetComponent<SCR_Player>().moveSpeed * Time.deltaTime);
+                if (Vector3.Distance(playerPos, movepoint) <= 0.05f)
+                {
+                    stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardCost;
                     //EXIT the state
                     stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
                 }
             }
             else
             {
-                for (int k = 0; k < spellRangePositions.Length; k++)
-                {
-                    groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
-                    groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
-                    groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
-                    spellRangePositions[k] = new Vector2Int(0, 0);
-                }
+                stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
             }
-        }
-        else
-        {
-            for (int k = 0; k < spellRangePositions.Length; k++)
-            {
-                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
-                groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
-                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
-                spellRangePositions[k] = new Vector2Int(0, 0);
-            }
+
         }
     }
 
@@ -146,6 +147,7 @@ public class SCR_CastSpellState : IState
                     case elementType.Water:
                         //Water healing and damage spells are halved on this tile this turn.
                         tile.tileEffect = tileEffect.waterHalfEffect;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Fire:
                         //Fire healing and damage spells are halved on this tile this turn.
@@ -414,5 +416,33 @@ public class SCR_CastSpellState : IState
         Debug.Log(gObject.name);
     }
 
-    
+    private bool HasTheComponents()
+    {
+        elementType[] infusionSlots = stateMachine.player.GetComponent<SCR_Player>().infusionslots;
+        SO_Spell spellCard = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard;
+        int mandatoryNumberOfSlots = 0;
+        for (int i = 0; i < infusionSlots.Length; i++)
+        {
+            if (spellCard.mandatoryElement == infusionSlots[i])
+            {
+                mandatoryNumberOfSlots++;
+            }
+        }
+        if (mandatoryNumberOfSlots >= spellCard.mandatoryElementAmount)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void SetTileEffectMarker()
+    {
+        GameObject target = stateMachine.transform.Find("tileEffectSprite").gameObject;
+        GameObject tileEffectGO = GameObject.Instantiate(target, pos + new Vector3(0.5f, 0.5f), Quaternion.identity);
+        tileEffectGO.SetActive(true);
+        tileEffectGO.transform.SetParent(GameObject.Find("TileEffectContainer").transform);
+    }
 }

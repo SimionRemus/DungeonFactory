@@ -12,10 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
   m_Name: EarthCardTest
   m_EditorClassIdentifier: 
+  SpellID: 0
   cardImage: {fileID: 0}
   cardCost: 0
   cardDescription: This is an earth card test
   cardName: EarthCardTest
   mandatoryElement: 1
+  mandatoryElementAmount: 0
   optionalElements: 
   forbiddenElements: 
+  SpellRange:
+  - {x: 1, y: 0}
+  - {x: -1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: -1}

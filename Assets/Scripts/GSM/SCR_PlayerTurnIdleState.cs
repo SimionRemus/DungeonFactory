@@ -47,8 +47,7 @@ public class SCR_PlayerTurnIdleState : IState
 
         newTurnWillpower = 3;
 
-
-
+        Debug.Log("playerTurnIdleState");
 
     }
 
@@ -102,9 +101,7 @@ public class SCR_PlayerTurnIdleState : IState
                     {
                         Vector2Int sRTPos = playerTilePos + new Vector2Int(spellRange[j].x, spellRange[j].y);
                         spellRangePositions[j] = sRTPos;
-                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.None);
-                        groundTilemap.SetColor(new Vector3Int(sRTPos.x, sRTPos.y, 0), new Color32(100, 100, 255, 255));
-                        groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.LockAll);
+                        HighlightRange(true, j);
                     }
                 }
             }
@@ -119,7 +116,10 @@ public class SCR_PlayerTurnIdleState : IState
                 {
                     if (ValidateSpell(tilePos))
                     {
-                        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardCost;
+                        for (int k = 0; k < spellRangePositions.Length; k++)
+                        {
+                            HighlightRange(false, k);
+                        }
                         stateMachine.ChangeState(stateMachine.CastSpellState);
                     }
                 }
@@ -129,10 +129,7 @@ public class SCR_PlayerTurnIdleState : IState
         {
             for (int k = 0; k < spellRangePositions.Length; k++)
             {
-                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
-                groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
-                groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
-                spellRangePositions[k] = new Vector2Int(0, 0);
+                HighlightRange(false, k);
             }
         }
         #endregion
@@ -142,8 +139,16 @@ public class SCR_PlayerTurnIdleState : IState
 
     private void EndTurnClicked()
     {
+        //Reset willpower and remove one torch
         stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower = newTurnWillpower;
         stateMachine.player.GetComponent<SCR_Player>().numberOfTorches -= 1;
+        //Remove Tile Effect markers
+        GameObject TEC = GameObject.Find("TileEffectContainer");
+        for (int i = 0; i < TEC.transform.childCount; i++)
+        {
+            GameObject.Destroy(TEC.transform.GetChild(i).gameObject);
+        }
+        //Change state
         stateMachine.ChangeState(stateMachine.EndPlayerTurnState);
     }
 
@@ -173,5 +178,22 @@ public class SCR_PlayerTurnIdleState : IState
 
         return false;
 
+    }
+
+    private void HighlightRange(bool highlight,int k)
+    {
+        if(highlight)
+        {
+            groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
+            groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(100, 100, 255, 255));
+            groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
+        }
+        else
+        {
+            groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.None);
+            groundTilemap.SetColor(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), new Color32(255, 255, 255, 255));
+            groundTilemap.SetTileFlags(new Vector3Int(spellRangePositions[k].x, spellRangePositions[k].y, 0), TileFlags.LockAll);
+            spellRangePositions[k] = new Vector2Int(0, 0);
+        }
     }
 }
