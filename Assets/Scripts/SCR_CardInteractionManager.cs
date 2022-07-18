@@ -97,7 +97,7 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
                     break;
             }
         }
-        spellBook = GameMenu.transform.Find("Spellbook");
+        spellBook = GameMenu.transform.Find("Spellbook").Find("Cards");
         cardCount = spellBook.childCount;
         for (int i = 0; i < cardCount; i++)
         {
@@ -143,7 +143,7 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
                 SelectionBox.enabled = true;
                 SelectionBox.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
             }
-            else
+            if (itemBeingSelected.transform.parent == GameMenu.transform.Find("Spellbook").Find("Cards"))
             {
                 SelectionBoxSB.enabled = true;
                 SelectionBoxSB.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
@@ -164,8 +164,12 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
         }
         else
         {
-            SelectionBox.enabled = false;
-            SelectionBoxSB.enabled = false;
+            SCR_GameSM stateMachine = GameObject.Find("Managers").transform.GetComponent<SCR_GameSM>();
+            if (stateMachine.currentState!=stateMachine.SpellbookSwapState)
+            {
+                SelectionBox.enabled = false;
+                SelectionBoxSB.enabled = false;
+            }
             itemBeingSelected = null;
             var CardDisplay = CardDetailsUI.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
             CardDisplay.GetComponent<SCR_CardInfoDisplay>().SpellCard = null;
