@@ -17,12 +17,21 @@ public class SCR_Player : MonoBehaviour
     public int numberOfTorches;
     public int numberOfWillpower;
     public int numberOfHitpoints;
+    public int baseNumberOfWillpower;
+    public int numberOfTorchesModifier;
+    public int numberOfWillpowerModifier;
+    public int numberOfHitpointsModifier;
     [SerializeField]
     private Text numberOfTorchesText;
     [SerializeField]
     private Text numberOfWillPowerText;
     [SerializeField]
     private Text numberOfHitpointsText;
+    #endregion
+    #region UI stuff
+    [SerializeField] Image[] Elements;
+    [SerializeField] Sprite[] elementSprites;
+
     #endregion
 
     // Start is called before the first frame update
@@ -33,6 +42,10 @@ public class SCR_Player : MonoBehaviour
         numberOfHitpoints = 100;
         numberOfTorches = 30;
         numberOfWillpower = 3;
+        baseNumberOfWillpower = 3;
+        numberOfHitpointsModifier = 0;
+        numberOfTorchesModifier = 0;
+        numberOfWillpowerModifier = 0;
     }
 
     // Update is called once per frame
@@ -83,16 +96,18 @@ public class SCR_Player : MonoBehaviour
                 infusionslots[6] = element;
                 break;
         }
+        UpdateElementsUI();
     }
 
     public void RotateSlots()
     {
-        elementType auxElem = infusionslots[0];
-        for (int i = 0; i < 6; i++)
+        elementType auxElem = infusionslots[6];
+        for (int i = 5; i >=0; i--)
         {
-            infusionslots[i] = infusionslots[i + 1];
+            infusionslots[i+1] = infusionslots[i];
         }
-        infusionslots[6] = auxElem;
+        infusionslots[0] = auxElem;
+        UpdateElementsUI();
     }
 
     private void DebugWASDMovement()
@@ -121,5 +136,55 @@ public class SCR_Player : MonoBehaviour
         numberOfHitpointsText.text = numberOfHitpoints.ToString();
         numberOfTorchesText.text = numberOfTorches.ToString();
         numberOfWillPowerText.text = numberOfWillpower.ToString();
+    }
+
+    public void UpdateWillpower()
+    {
+        numberOfWillpower = numberOfWillpowerModifier+baseNumberOfWillpower;
+    }
+
+    public void UpdateHitpoints()
+    {
+        numberOfHitpoints += numberOfHitpointsModifier;
+    }
+
+    public void UpdateTorches()
+    {
+        numberOfTorches += numberOfTorchesModifier;
+        
+    }
+
+    private void UpdateElementsUI()
+    {
+        for (int i = 0; i < infusionslots.Length; i++)
+        {
+            switch (infusionslots[i])
+            {
+                case elementType.None:
+                    Elements[i].sprite = elementSprites[7];
+                    break;
+                case elementType.Earth:
+                    Elements[i].sprite = elementSprites[0];
+                    break;
+                case elementType.Water:
+                    Elements[i].sprite = elementSprites[1];
+                    break;
+                case elementType.Fire:
+                    Elements[i].sprite = elementSprites[2];
+                    break;
+                case elementType.Air:
+                    Elements[i].sprite = elementSprites[3];
+                    break;
+                case elementType.Divination:
+                    Elements[i].sprite = elementSprites[4];
+                    break;
+                case elementType.Illusion:
+                    Elements[i].sprite = elementSprites[5];
+                    break;
+                case elementType.Life:
+                    Elements[i].sprite = elementSprites[6];
+                    break;
+            }
+        }
     }
 }

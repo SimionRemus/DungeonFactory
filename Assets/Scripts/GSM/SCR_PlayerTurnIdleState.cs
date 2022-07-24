@@ -16,7 +16,6 @@ public class SCR_PlayerTurnIdleState : IState
 
     public Button endTurn;
     public Button spellbook;
-    public int newTurnWillpower;
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
@@ -45,8 +44,6 @@ public class SCR_PlayerTurnIdleState : IState
         spellbook = stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Button>();
         spellbook.onClick.AddListener(SpellbookClicked);
 
-        newTurnWillpower = 3;
-
         Debug.Log("playerTurnIdleState");
 
     }
@@ -60,7 +57,7 @@ public class SCR_PlayerTurnIdleState : IState
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = false;
 
-
+        
         endTurn.onClick.RemoveListener(EndTurnClicked);
         spellbook.onClick.RemoveListener(SpellbookClicked);
     }
@@ -140,7 +137,6 @@ public class SCR_PlayerTurnIdleState : IState
     private void EndTurnClicked()
     {
         //Reset willpower and remove one torch
-        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower = newTurnWillpower;
         stateMachine.player.GetComponent<SCR_Player>().numberOfTorches -= 1;
         //Remove Tile Effect markers
         GameObject TEC = GameObject.Find("TileEffectContainer");
@@ -148,13 +144,24 @@ public class SCR_PlayerTurnIdleState : IState
         {
             GameObject.Destroy(TEC.transform.GetChild(i).gameObject);
         }
+        stateMachine.player.GetComponent<SCR_Player>().UpdateWillpower();
+        stateMachine.player.GetComponent<SCR_Player>().UpdateTorches();
+        stateMachine.player.GetComponent<SCR_Player>().UpdateHitpoints();
+        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpowerModifier = 0;
+        stateMachine.player.GetComponent<SCR_Player>().numberOfHitpointsModifier = 0;
+        stateMachine.player.GetComponent<SCR_Player>().numberOfTorchesModifier = 0;
         //Change state
         stateMachine.ChangeState(stateMachine.EndPlayerTurnState);
     }
 
     private void SpellbookClicked()
     {
-        stateMachine.ChangeState(stateMachine.SpellbookSwapState);
+        if(stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower>=2)
+        {
+            stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= 2;
+            stateMachine.ChangeState(stateMachine.SpellbookSwapState);
+        }
+        
     }
 
     private bool ValidateSpell(Vector3Int tilePos)

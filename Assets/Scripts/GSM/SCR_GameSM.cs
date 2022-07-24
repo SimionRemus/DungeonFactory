@@ -91,4 +91,5 @@ public class SCR_GameSM : MonoBehaviour
         if(currentState!=null && !intransition)
             currentState.OnUpdate();
     }
+
 }

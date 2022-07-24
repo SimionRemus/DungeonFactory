@@ -12,6 +12,10 @@ public class SCR_SpellBookSwapState : IState
     private Image SelectionBox;
     public Button spellbookButton;
     private Button SwapSpellsButton;
+    SpriteState ss;
+    Sprite normalSprite;
+    Sprite highlightedSprite;
+    Sprite auxSprite;
 
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
@@ -34,10 +38,18 @@ public class SCR_SpellBookSwapState : IState
 
 
         spellbook = stateMachine.GameUI.transform.Find("Spellbook").gameObject;
-
+        
+        ss= stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Button>().spriteState;
+        normalSprite = stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Image>().sprite;
+        highlightedSprite=ss.highlightedSprite;
+        
         Debug.Log("Opening spellbook");
         spellbook.SetActive(true);
-        stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponentInChildren<Text>().text = "Close Spellbook";
+
+        auxSprite = normalSprite;
+        stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Image>().sprite = highlightedSprite;
+        ss.highlightedSprite = auxSprite;
+        stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Button>().spriteState= ss;
 
         SelectionBoxSB = stateMachine.GameUI.transform.Find("CardSelectionBoxSB").gameObject.GetComponent<Image>();
         SelectionBox = stateMachine.GameUI.transform.Find("CardSelectionBox").gameObject.GetComponent<Image>();
@@ -47,6 +59,7 @@ public class SCR_SpellBookSwapState : IState
 
         spellbookButton = stateMachine.GameUI.transform.Find("Spellbook").Find("Swap Spells").GetComponent<Button>();
         spellbookButton.onClick.AddListener(SwapCards);
+
     }
 
     void IState.OnExit()
@@ -60,7 +73,7 @@ public class SCR_SpellBookSwapState : IState
 
         Debug.Log("Closing spellbook");
         spellbook.SetActive(false);
-        stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponentInChildren<Text>().text = "Open Spellbook";
+
         SelectionBoxSB.enabled = false;
 
         spellbookButton.onClick.RemoveListener(SpellbookClicked);
@@ -74,6 +87,15 @@ public class SCR_SpellBookSwapState : IState
 
     private void SpellbookClicked()
     {
+        ss = stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Button>().spriteState;
+        normalSprite = stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Image>().sprite;
+        highlightedSprite = ss.highlightedSprite;
+
+        auxSprite = normalSprite;
+        stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Image>().sprite = highlightedSprite;
+        ss.highlightedSprite = auxSprite;
+        stateMachine.GameUI.transform.Find("OpenSpellbook").GetComponent<Button>().spriteState = ss;
+
         stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
     }
 
@@ -91,7 +113,6 @@ public class SCR_SpellBookSwapState : IState
             if (currentCard.position == SelectionBox.rectTransform.position)
             {
                 selectedCardKnown = currentCard.gameObject;
-                Debug.Log(selectedCardKnown.name);
             }
         }
         for (int i = 0; i < cardNumberBook; i++)
@@ -100,7 +121,6 @@ public class SCR_SpellBookSwapState : IState
             if (currentCard.position == SelectionBoxSB.rectTransform.position)
             {
                 selectedCardBook = currentCard.gameObject;
-                Debug.Log(selectedCardBook.name);
             }
         }
         if(selectedCardKnown!=null && selectedCardBook!=null)
@@ -109,10 +129,12 @@ public class SCR_SpellBookSwapState : IState
             int selectedCardBookIndex = selectedCardBook.transform.GetSiblingIndex();
 
             GameObject swappedKnown= GameObject.Instantiate(selectedCardKnown);
+            swappedKnown.name = selectedCardKnown.name;
             swappedKnown.transform.SetParent(selectedCardBook.transform.parent);
             swappedKnown.transform.SetSiblingIndex(selectedCardBookIndex);
 
             GameObject swappedBook = GameObject.Instantiate(selectedCardBook);
+            swappedBook.name = selectedCardBook.name;
             swappedBook.transform.SetParent(selectedCardKnown.transform.parent);
             swappedBook.transform.SetSiblingIndex(selectedCardKnownIndex);
 

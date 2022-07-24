@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
-  m_Name: FireCardTest
+  m_Name: DivinationCardTest
   m_EditorClassIdentifier: 
-  cardImage: {fileID: 21300000, guid: 9b5494ebbbddb0c4ca6b8ecb02514226, type: 3}
+  SpellID: 0
+  cardImage: {fileID: 0}
   cardCost: 0
-  cardDescription: This is a fire card test
-  cardName: FireCardTest
-  mandatoryElement: 3
+  cardDescription: This is a divination card test
+  cardName: DivinationCardTest
+  mandatoryElement: 5
+  mandatoryElementAmount: 0
   optionalElements: 
-  forbiddenElements: 00000000
+  forbiddenElements: 
+  SpellRange: []

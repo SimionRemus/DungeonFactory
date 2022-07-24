@@ -10,12 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
-  m_Name: IllusionCardTest
+  m_Name: MoveNEWS3
   m_EditorClassIdentifier: 
+  SpellID: 2
   cardImage: {fileID: 0}
-  cardCost: 0
-  cardDescription: This is an illusion card test
-  cardName: IllusionCardTest
-  mandatoryElement: 6
+  cardCost: 2
+  cardDescription: Move in a straight line in any cardinal direction for 3 spaces
+  cardName: Move straight 3
+  mandatoryElement: 0
+  mandatoryElementAmount: 0
   optionalElements: 
   forbiddenElements: 
+  SpellRange:
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  - {x: 3, y: 0}
+  - {x: -1, y: 0}
+  - {x: -2, y: 0}
+  - {x: -3, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 0, y: 3}
+  - {x: 0, y: -1}
+  - {x: 0, y: -2}
+  - {x: 0, y: -3}

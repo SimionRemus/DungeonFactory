@@ -10,12 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
-  m_Name: DivinationCardTest
+  m_Name: MoveChessHorse
   m_EditorClassIdentifier: 
+  SpellID: 8
   cardImage: {fileID: 0}
-  cardCost: 0
-  cardDescription: This is a divination card test
-  cardName: DivinationCardTest
-  mandatoryElement: 5
+  cardCost: 1
+  cardDescription: Move in any direction like a chess knight
+  cardName: Move Chess Knight
+  mandatoryElement: 0
+  mandatoryElementAmount: 0
   optionalElements: 
   forbiddenElements: 
+  SpellRange:
+  - {x: 1, y: 2}
+  - {x: 1, y: -2}
+  - {x: 2, y: 1}
+  - {x: 2, y: -1}
+  - {x: -1, y: 2}
+  - {x: -1, y: -2}
+  - {x: -2, y: 1}
+  - {x: -2, y: -1}

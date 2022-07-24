@@ -10,23 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cd80b83ac4f3f438b0eecffb544d21, type: 3}
-  m_Name: NoneCardTest
+  m_Name: MoveAnywhere2
   m_EditorClassIdentifier: 
-  SpellID: 1
+  SpellID: 6
   cardImage: {fileID: 0}
-  cardCost: 1
-  cardDescription: This is a no element card test
-  cardName: NoneCardTest
+  cardCost: 2
+  cardDescription: Move in any direction 2 spaces
+  cardName: Move Anywhere 2
   mandatoryElement: 0
   mandatoryElementAmount: 0
   optionalElements: 
   forbiddenElements: 
   SpellRange:
-  - {x: 0, y: 1}
-  - {x: 0, y: -1}
-  - {x: 0, y: 2}
-  - {x: 0, y: -2}
   - {x: 1, y: 0}
-  - {x: -1, y: 0}
   - {x: 2, y: 0}
+  - {x: -1, y: 0}
   - {x: -2, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 0, y: -1}
+  - {x: 0, y: -2}
+  - {x: 1, y: 1}
+  - {x: 2, y: 2}
+  - {x: -1, y: -1}
+  - {x: -2, y: -2}
+  - {x: 1, y: -1}
+  - {x: 2, y: -2}
+  - {x: -1, y: 1}
+  - {x: -2, y: 2}

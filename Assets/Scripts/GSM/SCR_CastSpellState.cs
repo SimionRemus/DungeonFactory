@@ -72,15 +72,6 @@ public class SCR_CastSpellState : IState
 
                     Vector3 playerPos = groundTilemap.WorldToCell(stateMachine.player.transform.position);
                     Vector2Int playerTilePos = new Vector2Int((int)playerPos.x, (int)playerPos.y);
-                    //spellRange = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.SpellRange;
-                    //for (int j = 0; j < spellRange.Length; j++)
-                    //{
-                    //    Vector2Int sRTPos = playerTilePos + new Vector2Int(spellRange[j].x, spellRange[j].y);
-                    //    spellRangePositions[j] = sRTPos;
-                    //    groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.None);
-                    //    groundTilemap.SetColor(new Vector3Int(sRTPos.x, sRTPos.y, 0), new Color32(100, 100, 255, 255));
-                    //    groundTilemap.SetTileFlags(new Vector3Int(sRTPos.x, sRTPos.y, 0), TileFlags.LockAll);
-                    //}
                 }
             }
             if (!tileEffectApplied)
@@ -91,32 +82,30 @@ public class SCR_CastSpellState : IState
                 TileWithAttributes tileground = (TileWithAttributes)groundTilemap.GetTile(tilePos);
                 if (tileground != null)
                 {
-                    //GameObject target = stateMachine.transform.Find("tileEffectSprite").gameObject;
-                    //GameObject tileEffect = GameObject.Instantiate(target, pos + new Vector3(0.5f, 0.5f), Quaternion.identity);
-                    //tileEffect.SetActive(true);
-                    //tileEffect.transform.SetParent(GameObject.Find("TileEffectContainer").transform);
-
                     //Check if anything is on tile:
-                    Vector3 midpoint = groundTilemap.CellToWorld(tilePos) + new Vector3(0.5f, 0.5f, 0);
-                    Collider2D collider = Physics2D.OverlapCircle(midpoint, 0.45f);
-                    if (collider)
-                    {
-                        AffectUnitOnTile(collider.gameObject);
-                    }
+                    
                 }
             }
-            //TO BE completed (all 7x7 possibilities)
             if (HasTheComponents())
             {
                 
+                Vector3 midpoint = groundTilemap.CellToWorld(tilePos) + new Vector3(0.5f, 0.5f, 0);
+                Collider2D collider = Physics2D.OverlapCircle(midpoint, 0.45f);
+                if (collider)
+                {
+                    AffectUnitOnTile(collider.gameObject);
+                }
                 SpellEnvironmentalEffect(selectedCard, tilePos);
-                selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.DoSpellEffects(stateMachine.player, groundTilemap, stateMachine, tilePos);
+                bool didSpellWork = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.DoSpellEffects(stateMachine.player, groundTilemap, stateMachine, tilePos, collider);
                 var movepoint = GameObject.Find("Movepoint").transform.position;
                 var playerPos = stateMachine.player.transform.position;
                 playerPos = Vector3.MoveTowards(playerPos, movepoint, stateMachine.player.GetComponent<SCR_Player>().moveSpeed * Time.deltaTime);
                 if (Vector3.Distance(playerPos, movepoint) <= 0.05f)
                 {
-                    stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardCost;
+                    if(didSpellWork)
+                    {
+                        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.cardCost;
+                    }
                     //EXIT the state
                     stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
                 }
@@ -145,15 +134,19 @@ public class SCR_CastSpellState : IState
                     case elementType.Earth:
                         break;
                     case elementType.Water:
-                        //Water healing and damage spells are halved on this tile this turn.
+                        //Causes half damage or heal if spell is water this turn.
                         tile.tileEffect = tileEffect.waterHalfEffect;
                         SetTileEffectMarker();
                         break;
                     case elementType.Fire:
-                        //Fire healing and damage spells are halved on this tile this turn.
+                        //Causes half damage or heal if spell is fire this turn.
+                        tile.tileEffect = tileEffect.fireHalfEffect;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Air:
                         //Causes double damage if spell is earth attack this turn.
+                        tile.tileEffect = tileEffect.doubleEarthDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Divination:
                         //turn to random tile between [dirt(55%)], [volcanic(15%)], [swamp(15%)] or [sand(15%)]
@@ -176,11 +169,8 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Illusion:
                         //Spells of earth type will cause either double or no effect.
-                        break;
-                    case elementType.Life:
-                        groundTilemap.SetTile(tilePos, stateMachine.grid.GetComponent<SCR_FloorGeneration>().tilePrefabs[0]);
-                        break;
-                    default:
+                        tile.tileEffect = tileEffect.doubleOrNothingEarthDamage;
+                        SetTileEffectMarker();
                         break;
                 }
                 break;
@@ -196,9 +186,13 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Fire:
                         //Causes 2x damage if spell is water attack this turn.
+                        tile.tileEffect = tileEffect.doubleWaterDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Air:
                         //Tile is considered 2 tiles for movement this turn.
+                        tile.tileEffect = tileEffect.halfSpeed;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Divination:
                         int v = Random.Range(0, 3);
@@ -213,16 +207,22 @@ public class SCR_CastSpellState : IState
                                 break;
                             case 2:
                                 //[causes x1.5 damage on this tile this turn]
+                                tile.tileEffect = tileEffect.extraFiftyPercentDamage;
+                                SetTileEffectMarker();
                                 break;
                             default:
                                 break;
                         }
                         break;
                     case elementType.Illusion:
-                        //Spells of earth type will cause either double or no effect.
+                        //Spells of water type will cause either double or no effect.
+                        tile.tileEffect = tileEffect.doubleOrNothingWaterDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Life:
                         //Life spells are played twice on this tile this turn
+                        tile.tileEffect = tileEffect.lifeTwice;
+                        SetTileEffectMarker();
                         break;
                     default:
                         break;
@@ -237,12 +237,16 @@ public class SCR_CastSpellState : IState
                         groundTilemap.SetTile(tilePos, stateMachine.grid.GetComponent<SCR_FloorGeneration>().tilePrefabs[2]);
                         break;
                     case elementType.Water:
-                        //Causes x1.25 damage on this tile this turn.
+                        //Causes x1.5 damage on this tile this turn.
+                        tile.tileEffect = tileEffect.extraFiftyPercentDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Fire:
                         break;
                     case elementType.Air:
                         //Causes 2x damage if spell is fire attack this turn.
+                        tile.tileEffect = tileEffect.doubleFireDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Divination:
                         int v = Random.Range(0, 3);
@@ -257,16 +261,22 @@ public class SCR_CastSpellState : IState
                                 break;
                             case 2:
                                 //[causes x2 damage on this tile if spell is fire-attack]
+                                tile.tileEffect = tileEffect.doubleFireDamage;
+                                SetTileEffectMarker();
                                 break;
                             default:
                                 break;
                         }
                         break;
                     case elementType.Illusion:
-                        //Spells of earth type will cause either double or no effect.
+                        //Spells of fire type will cause either double or no effect.
+                        tile.tileEffect = tileEffect.doubleOrNothingFireDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Life:
                         //Life spells have no effect on this tile this turn (still consumes willpower).
+                        tile.tileEffect = tileEffect.lifeCancel;
+                        SetTileEffectMarker();
                         break;
                     default:
                         break;
@@ -282,9 +292,13 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Water:
                         //Tile halves healing on it for this turn.
+                        tile.tileEffect = tileEffect.halfHealEffect;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Fire:
                         //Causes 2x damage if spell is air-attack this turn.
+                        tile.tileEffect = tileEffect.doubleAirDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Air:
                         break;
@@ -301,16 +315,22 @@ public class SCR_CastSpellState : IState
                                 break;
                             case 2:
                                 //[Tile is considered 2 tiles for movement this turn]
+                                tile.tileEffect = tileEffect.halfSpeed;
+                                SetTileEffectMarker();
                                 break;
                             default:
                                 break;
                         }
                         break;
                     case elementType.Illusion:
-                        //Spells of earth type will cause either double or no effect.
+                        //Spells of air type will cause either double or no effect.
+                        tile.tileEffect = tileEffect.doubleOrNothingAirDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Life:
                         //Neighboring tiles receive 5 damage.
+                        tile.tileEffect = tileEffect.dmgNeighboursFive;
+                        SetTileEffectMarker();
                         break;
                     default:
                         break;
@@ -326,17 +346,25 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Water:
                         //Heals for 5HP if passed through this turn.
+                        tile.tileEffect = tileEffect.healFiveIfPassed;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Fire:
                         //Damages for 5HP if passed through this turn.
+                        tile.tileEffect = tileEffect.dmgFiveIfPassed;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Air:
                         //Free movement this turn.
+                        tile.tileEffect = tileEffect.doubleSpeed;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Divination:
                         break;
                     case elementType.Illusion:
                         //Illusion spells cast here receive no bonus from optional components this turn.
+                        tile.tileEffect = tileEffect.noBonusOnIllusion;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Life:
                         if (Random.Range(0, 2) == 0)
@@ -356,12 +384,17 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Water:
                         //Healing spells cause damage instead this turn
+                        tile.tileEffect = tileEffect.healToDamage;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Fire:
                         //Damage spells cause healing instead this turn
+                        tile.tileEffect = tileEffect.dmgToHeal;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Air:
                         //50% chance to spawn NPC (event or monster)
+                        //TO DO
                         break;
                     case elementType.Divination:
                         if (Random.Range(0, 2) == 0)
@@ -371,6 +404,8 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Life:
                         //Heals 10HP if turn ends here.
+                        tile.tileEffect = tileEffect.healTenOnEOT;
+                        SetTileEffectMarker();
                         break;
                     default:
                         break;
@@ -386,15 +421,23 @@ public class SCR_CastSpellState : IState
                         break;
                     case elementType.Water:
                         //Will consume 1 torch when passed through this turn.
+                        tile.tileEffect = tileEffect.useTorchIfPassed;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Fire:
                         //Lights up room. won't use torch at the end of this turn if in the same room.
+                        tile.tileEffect = tileEffect.noTorchUsed;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Air:
                         //Creates wall for this turn if no one there. 10DMG to creature there otherwise
+                        tile.tileEffect = tileEffect.createWall;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Divination:
                         //Causes 10DMG if turn ends here.
+                        tile.tileEffect = tileEffect.dmgTenOnEOT;
+                        SetTileEffectMarker();
                         break;
                     case elementType.Illusion:
                         if (Random.Range(0, 2) == 0)
@@ -423,6 +466,7 @@ public class SCR_CastSpellState : IState
         int mandatoryNumberOfSlots = 0;
         for (int i = 0; i < infusionSlots.Length; i++)
         {
+            Debug.Log(infusionSlots[i]);
             if (spellCard.mandatoryElement == infusionSlots[i])
             {
                 mandatoryNumberOfSlots++;
@@ -444,5 +488,6 @@ public class SCR_CastSpellState : IState
         GameObject tileEffectGO = GameObject.Instantiate(target, pos + new Vector3(0.5f, 0.5f), Quaternion.identity);
         tileEffectGO.SetActive(true);
         tileEffectGO.transform.SetParent(GameObject.Find("TileEffectContainer").transform);
+        Debug.Log("CAST SPELL with effect");
     }
 }

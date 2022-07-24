@@ -56,6 +56,7 @@ MonoBehaviour:
   CardDetailsUI: {fileID: 0}
   GameMenu: {fileID: 0}
   SelectionBox: {fileID: 0}
+  SelectionBoxSB: {fileID: 0}
 --- !u!114 &6166807356329184429
 MonoBehaviour:
   m_ObjectHideFlags: 0
