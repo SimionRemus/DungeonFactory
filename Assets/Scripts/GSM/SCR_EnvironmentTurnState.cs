@@ -19,16 +19,23 @@ public class SCR_EnvironmentTurnState : IState
     void IState.OnEnter()
     {
         Debug.Log("Environment turn started");
+        stateMachine.player.GetComponent<SCR_Player>().UpdateWillpower();
+        stateMachine.player.GetComponent<SCR_Player>().UpdateTorches();
+        stateMachine.player.GetComponent<SCR_Player>().UpdateHitpoints();
+        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpowerModifier = 0;
+        stateMachine.player.GetComponent<SCR_Player>().numberOfHitpointsModifier = 0;
+        stateMachine.player.GetComponent<SCR_Player>().numberOfTorchesModifier = 0;
     }
 
     void IState.OnExit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Environment turn ended");
     }
     
 
     void IState.OnUpdate()
     {
         Debug.Log("Doing environ stuff here");
+        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
     }
 }

@@ -65,6 +65,6 @@ public class SCR_UpgradeSpellState : IState
     {
         yield return new WaitForSeconds(waitTime);
         stateMachine.player.GetComponent<SCR_Player>().RotateSlots(); //will be enemy turn in the end
-        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState); //will be enemy turn in the end
+        stateMachine.ChangeState(stateMachine.NewSpellState); //will be enemy turn in the end
     }
 }

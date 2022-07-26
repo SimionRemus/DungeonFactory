@@ -144,12 +144,7 @@ public class SCR_PlayerTurnIdleState : IState
         {
             GameObject.Destroy(TEC.transform.GetChild(i).gameObject);
         }
-        stateMachine.player.GetComponent<SCR_Player>().UpdateWillpower();
-        stateMachine.player.GetComponent<SCR_Player>().UpdateTorches();
-        stateMachine.player.GetComponent<SCR_Player>().UpdateHitpoints();
-        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpowerModifier = 0;
-        stateMachine.player.GetComponent<SCR_Player>().numberOfHitpointsModifier = 0;
-        stateMachine.player.GetComponent<SCR_Player>().numberOfTorchesModifier = 0;
+        
         //Change state
         stateMachine.ChangeState(stateMachine.EndPlayerTurnState);
     }

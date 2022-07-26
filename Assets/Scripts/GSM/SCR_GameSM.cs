@@ -29,6 +29,7 @@ public class SCR_GameSM : MonoBehaviour
     public SCR_UpgradeSpellState UpgradeSpellState;
     public SCR_VictoryState VictoryState;
     public SCR_SpellBookSwapState SpellbookSwapState;
+    public SCR_NewSpellState NewSpellState;
     #endregion
 
     [SerializeField] public Canvas MainMenuUI;
@@ -60,6 +61,7 @@ public class SCR_GameSM : MonoBehaviour
         UpgradeSpellState = new SCR_UpgradeSpellState(this);
         VictoryState = new SCR_VictoryState(this);
         SpellbookSwapState = new SCR_SpellBookSwapState(this);
+        NewSpellState = new SCR_NewSpellState(this);
         #endregion
         ChangeState(MainMenuState);
     }

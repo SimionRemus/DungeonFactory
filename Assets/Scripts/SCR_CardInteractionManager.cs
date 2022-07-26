@@ -13,12 +13,14 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
     [SerializeField] private Canvas GameMenu;
     [SerializeField] private Image SelectionBox;
     [SerializeField] private Image SelectionBoxSB;
+    [SerializeField] private Image SelectionBoxCC;
 
     private IEnumerator popUpCard;
     private GameObject prevGO=null;
     private int cardCount;
     private Transform actionList;
     private Transform spellBook;
+    private Transform spellChoice;
 
     #region ColorDefinition
     Color Earth, Water, Air, Fire, Divination, Illusion, Life, NoElement;
@@ -60,6 +62,10 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
             if (ui.ToString().Split(' ')[0].Equals("CardSelectionBoxSB"))
             {
                 SelectionBoxSB = ui.GetComponent<Image>();
+            }
+            if (ui.ToString().Split(' ')[0].Equals("CardSelectionBoxCC"))
+            {
+                SelectionBoxCC = ui.GetComponent<Image>();
             }
         }
         #endregion
@@ -130,6 +136,40 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
                     break;
             }
         }
+
+        spellChoice = GameMenu.transform.Find("GetNewSpellPanel").Find("CardChoice");
+        cardCount = spellChoice.childCount;
+        for (int i = 0; i < cardCount; i++)
+        {
+            var mandatoryElement = spellChoice.GetChild(i).GetComponent<SCR_CardInfoDisplay>().SpellCard.mandatoryElement;
+            switch (mandatoryElement)
+            {
+                case elementType.None:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = NoElement;
+                    break;
+                case elementType.Earth:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Earth;
+                    break;
+                case elementType.Water:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Water;
+                    break;
+                case elementType.Fire:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Fire;
+                    break;
+                case elementType.Air:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Air;
+                    break;
+                case elementType.Divination:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Divination;
+                    break;
+                case elementType.Illusion:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Illusion;
+                    break;
+                case elementType.Life:
+                    spellChoice.GetChild(i).GetChild(0).GetComponent<Image>().color = Life;
+                    break;
+            }
+        }
         #endregion
     }
 
@@ -147,6 +187,11 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
             {
                 SelectionBoxSB.enabled = true;
                 SelectionBoxSB.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
+            }
+            if (itemBeingSelected.transform.parent == GameMenu.transform.Find("GetNewSpellPanel").Find("CardChoice"))
+            {
+                SelectionBoxCC.enabled = true;
+                SelectionBoxCC.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
             }
             prevGO = itemBeingSelected;
             //SelectionBox.rectTransform.SetPositionAndRotation(gameObject.transform.position, Quaternion.identity);
@@ -169,6 +214,7 @@ public class SCR_CardInteractionManager : MonoBehaviour, IPointerDownHandler, IP
             {
                 SelectionBox.enabled = false;
                 SelectionBoxSB.enabled = false;
+                SelectionBoxCC.enabled = false;
             }
             itemBeingSelected = null;
             var CardDisplay = CardDetailsUI.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;

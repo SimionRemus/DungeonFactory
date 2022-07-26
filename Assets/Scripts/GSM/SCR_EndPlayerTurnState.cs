@@ -13,6 +13,8 @@ public class SCR_EndPlayerTurnState : IState
     private Button yesButton;
     private Button noButton;
 
+    private string getElementText="Would you like to focus your surroundings to absorb the predominant elemental essence to use in your spells?";
+
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
@@ -34,6 +36,8 @@ public class SCR_EndPlayerTurnState : IState
 
         getElementPanel=stateMachine.GameUI.transform.Find("GetElementPanel").gameObject;
         getElementPanel.SetActive(true);
+
+        getElementPanel.transform.Find("Text").GetComponent<Text>().text = getElementText;
 
         yesButton =getElementPanel.transform.Find("Yes").GetComponent<Button>();
         yesButton.onClick.AddListener(YesAction);
@@ -71,7 +75,7 @@ public class SCR_EndPlayerTurnState : IState
     private void NoAction()
     {
         stateMachine.player.GetComponent<SCR_Player>().RotateSlots();
-        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState); //will be enemy turn in the end
+        stateMachine.ChangeState(stateMachine.NewSpellState); //will be enemy turn in the end
     }
 
 }
