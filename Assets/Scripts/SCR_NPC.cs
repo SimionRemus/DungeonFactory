@@ -5,8 +5,7 @@ using UnityEngine;
 public class SCR_NPC : MonoBehaviour
 {
     [SerializeField]
-    private int HP;
-    private int HPMax;
+    private SO_NPC npcData;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +16,7 @@ public class SCR_NPC : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(HP<=0)
+        if(npcData.HP<=0)
         {
             //NPC DIES
         }
@@ -30,16 +29,16 @@ public class SCR_NPC : MonoBehaviour
 
     public void AffectHitpoints(int ammount)
     {
-        if (HP + ammount > HPMax)
+        if (npcData.HP + ammount > npcData.HPMax)
         {
-            HP = HPMax;
+            npcData.HP = npcData.HPMax;
         }
         else
         {
-            if (HP + ammount < 0)
-                HP = 0;
+            if (npcData.HP + ammount < 0)
+                npcData.HP = 0;
             else
-                HP += ammount;
+                npcData.HP += ammount;
         }
     }
 }

@@ -1,0 +1,24 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using UnityEngine.UI;
+
+[CreateAssetMenu(fileName = "NPC", menuName = "ScriptableObjects/NPCs/NPC")]
+public class SO_NPC : ScriptableObject
+{
+    public int HP;
+    public int HPMax;
+    public string npcName;
+    public NPCtypes npcType;
+    public elementType elementType;
+    public Sprite npcSprite;
+    public int posX, posY;
+}
+
+
+public enum NPCtypes
+{
+    GenericNPC1,
+    GenericNPC2
+}

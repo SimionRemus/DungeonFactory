@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "Card", menuName = "Cards/Card")]
+[CreateAssetMenu(fileName = "Card", menuName = "ScriptableObjects/Cards/Card")]
 public class SO_Spell : ScriptableObject
 {
     public SpellList SpellID;

@@ -25,6 +25,8 @@ public class SCR_EnvironmentTurnState : IState
         stateMachine.player.GetComponent<SCR_Player>().numberOfWillpowerModifier = 0;
         stateMachine.player.GetComponent<SCR_Player>().numberOfHitpointsModifier = 0;
         stateMachine.player.GetComponent<SCR_Player>().numberOfTorchesModifier = 0;
+
+        stateMachine.grid.transform.GetComponent<SCR_FloorGeneration>().ToggleDoors();
     }
 
     void IState.OnExit()

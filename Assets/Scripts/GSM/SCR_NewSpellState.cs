@@ -13,6 +13,7 @@ public class SCR_NewSpellState : IState
     private Button noButton;
 
     private Button swapSpellsButton;
+    private Button cancelSwap;
 
     private GameObject selectedCardCC;
     private GameObject selectedCardSB;
@@ -52,6 +53,9 @@ public class SCR_NewSpellState : IState
         swapSpellsButton = stateMachine.GameUI.transform.Find("Spellbook").Find("Swap Spells").GetComponent<Button>();
         swapSpellsButton.onClick.AddListener(SwapSpells);
 
+        cancelSwap= stateMachine.GameUI.transform.Find("Spellbook").Find("CancelNewSpellSwap").GetComponent<Button>();
+        cancelSwap.onClick.AddListener(CancelSwap);
+
         selectedCard = null;
         selectedSBCard = null;
     }
@@ -68,6 +72,8 @@ public class SCR_NewSpellState : IState
         yesButton.onClick.RemoveListener(YesAction);
         noButton.onClick.RemoveListener(NoAction);
         swapSpellsButton.onClick.RemoveListener(SwapSpells);
+        cancelSwap.onClick.RemoveListener(CancelSwap);
+        stateMachine.GameUI.transform.Find("Spellbook").Find("CancelNewSpellSwap").gameObject.SetActive(false);
 
         getNewSpell.SetActive(false);
     }
@@ -107,7 +113,6 @@ public class SCR_NewSpellState : IState
         //Check if there is willpower left to add spell
         if (stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower >=1)
         {
-            stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= 1;
             //Add spells
             if(selectedCard)
             {
@@ -120,6 +125,7 @@ public class SCR_NewSpellState : IState
 
                     selectedCardCC.transform.GetComponent<Image>().enabled = false;
                     //End turn
+                    stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= 1;
                     stateMachine.ChangeState(stateMachine.EnvironmentTurnState);
                 }
                 else
@@ -133,12 +139,14 @@ public class SCR_NewSpellState : IState
 
                         selectedCardCC.transform.GetComponent<Image>().enabled = false;
                         //End turn
+                        stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= 1;
                         stateMachine.ChangeState(stateMachine.EnvironmentTurnState);
                     }
                     else
                     {
                         //Ask player to replace a spell from spellbook.
                         stateMachine.GameUI.transform.Find("Spellbook").gameObject.SetActive(true);
+                        stateMachine.GameUI.transform.Find("Spellbook").Find("CancelNewSpellSwap").gameObject.SetActive(true);
                         getNewSpell.SetActive(false);
                         selectedCardCC.transform.GetComponent<Image>().enabled = false;
                     }
@@ -150,6 +158,15 @@ public class SCR_NewSpellState : IState
 
     private void NoAction()
     {
+        selectedCardCC.transform.GetComponent<Image>().enabled = false;
+        stateMachine.ChangeState(stateMachine.EnvironmentTurnState);
+    }
+
+    private void CancelSwap()
+    {
+        selectedCardCC.transform.GetComponent<Image>().enabled = false;
+        stateMachine.GameUI.transform.Find("Spellbook").gameObject.SetActive(false);
+        selectedCardSB.transform.GetComponent<Image>().enabled = false;
         stateMachine.ChangeState(stateMachine.EnvironmentTurnState);
     }
 
@@ -168,6 +185,7 @@ public class SCR_NewSpellState : IState
             stateMachine.GameUI.transform.Find("Spellbook").gameObject.SetActive(false);
             selectedCardSB.transform.GetComponent<Image>().enabled = false;
             //End turn
+            stateMachine.player.GetComponent<SCR_Player>().numberOfWillpower -= 1;
             stateMachine.ChangeState(stateMachine.EnvironmentTurnState);
         }  
     }
