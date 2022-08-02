@@ -12,13 +12,20 @@ public class SO_NPC : ScriptableObject
     public string npcName;
     public NPCtypes npcType;
     public elementType elementType;
-    public Sprite npcSprite;
-    public int posX, posY;
+    public difficultyType difficulty;
 }
 
 
 public enum NPCtypes
 {
-    GenericNPC1,
-    GenericNPC2
+    EasyNPC,
+    MediumNPC,
+    HardNPC
+}
+
+public enum difficultyType
+{
+    Easy,
+    Medium,
+    Hard
 }

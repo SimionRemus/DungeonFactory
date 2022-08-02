@@ -2599,7 +2599,10 @@ MonoBehaviour:
   - {fileID: 3743844448372369940, guid: 3ec9b4061ee95784a94c0ba1efedd338, type: 3}
   - {fileID: 6280080278662872544, guid: 342d9e3eb8755a44da93ce3beeaa9109, type: 3}
   - {fileID: 4198557153915054529, guid: c05717a230f696a4f99977f2b1d761ab, type: 3}
-  NPCs: []
+  NPCs:
+  - {fileID: 5736205328857013703, guid: ee2a0d274d35036419c8bc7a9620844d, type: 3}
+  - {fileID: 1449264602761012899, guid: 1aa53ca1eab7b4844b966ba7ac30ea70, type: 3}
+  - {fileID: 2436063328285784565, guid: 04d4c94bb307cb74abdb6217898889d1, type: 3}
   events:
   - {fileID: 15467405058540390, guid: 8eb39677f702cf5488db766691ffd29b, type: 3}
   - {fileID: 8666846934263825705, guid: 2aa74095cbcfa2b449a5cd85a3dca072, type: 3}
@@ -3676,6 +3679,7 @@ MonoBehaviour:
   player: {fileID: 956839887}
   manager: {fileID: 361213086}
   eventContainer: {fileID: 1169336718}
+  npcContainer: {fileID: 1901599696}
   gameSeed: 0
   rows: 8
   cols: 6

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class SCR_NPC : MonoBehaviour
 {
-    [SerializeField]
-    private SO_NPC npcData;
+    public SO_NPC npcData;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +18,7 @@ public class SCR_NPC : MonoBehaviour
         if(npcData.HP<=0)
         {
             //NPC DIES
+            GameObject.Destroy(this.gameObject);
         }
     }
 

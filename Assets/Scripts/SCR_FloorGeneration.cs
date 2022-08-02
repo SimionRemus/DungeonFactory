@@ -12,6 +12,7 @@ public class SCR_FloorGeneration : MonoBehaviour
     public GameObject player;
     [SerializeField] private GameObject manager;
     [SerializeField] private GameObject eventContainer;
+    [SerializeField] private GameObject npcContainer;
     public int gameSeed;
 
     private int cellSize = 5;
@@ -45,18 +46,10 @@ public class SCR_FloorGeneration : MonoBehaviour
         GenerateMap();
         GenerateRooms();
         EventSpawner();
-        //CaveInit();
+        NPCSpawner();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ToggleDoors();
-            //CaveUpdate(0);
-        }
-    }
-
+    #region groundGenerations
     public void GenerateMap()
     {
         for (int row = 0; row < (rows* (cellSize + 1) + 1); row++)
@@ -72,8 +65,6 @@ public class SCR_FloorGeneration : MonoBehaviour
             }
         }
     }
-
-    
 
     private void createSeedTiles()
     {
@@ -102,6 +93,7 @@ public class SCR_FloorGeneration : MonoBehaviour
         }
         return closestPointIndex;
     }
+    #endregion
 
     #region Room System
 
@@ -163,12 +155,96 @@ public class SCR_FloorGeneration : MonoBehaviour
         {
             for (int col = 0; col < cols; col++)
             {
-                if(Random.Range(0f,1f)<=NPCThreshold)
+                int[] elemWeights = new int[7];
+                List<GameObject> filter1 = new List<GameObject>();
+                List<GameObject> filter2 = new List<GameObject>();
+
+                if (Random.Range(0f, 1f) <= NPCThreshold && !(col==0 && row==0))
                 {
-                    //spawn random NPC on random position within room
-                    int RoomPosition = Random.Range(0, cellSize * cellSize);
-                    NPCtypes monsterType = (NPCtypes)Random.Range(0, NPCtypes.GetNames(typeof(NPCtypes)).Length);
-                    //GameObject.Instantiate();
+                    bool isPositionTaken = true;
+                    //spawn random Event on random position within room
+                    while (isPositionTaken)
+                    {
+                        Vector3 defaultposition= new Vector3(row * (cellSize + 1) + 1.5f, col * (cellSize + 1) + 1.5f, 0);
+                        Vector3 position = new Vector3(row * (cellSize + 1) + 1.5f + Random.Range(0, cellSize), col * (cellSize + 1) + 1.5f + Random.Range(0, cellSize), 0);
+                        Collider2D collider = Physics2D.OverlapCircle(position, 0.45f);
+                        if (!collider)
+                        {
+                            isPositionTaken = false;
+                            List<GameObject> npcs = manager.GetComponent<SCR_ObjectLists>().NPCs;
+                            for (int i = 0; i < 5; i++)
+                            {
+                                for (int j = 0; j < 5; j++)
+                                {
+                                    TileWithAttributes tile = (TileWithAttributes)groundTilemap.GetTile(new Vector3Int((int)(i+defaultposition.x),(int)(j+defaultposition.y), 0));
+                                    if(tile!=null)
+                                        switch (tile.element)
+                                    {
+                                        case elementType.None:
+                                            break;
+                                        case elementType.Earth:
+                                            elemWeights[0]++;
+                                            break;
+                                        case elementType.Water:
+                                            elemWeights[1]++;
+                                            break;
+                                        case elementType.Fire:
+                                            elemWeights[2]++;
+                                            break;
+                                        case elementType.Air:
+                                            elemWeights[3]++;
+                                            break;
+                                        case elementType.Divination:
+                                            elemWeights[4]++;
+                                            break;
+                                        case elementType.Illusion:
+                                            elemWeights[5]++;
+                                            break;
+                                        case elementType.Life:
+                                            elemWeights[6]++;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                            elementType npcElement =NPCWeightedRandomElement(elemWeights);
+                            //Filter NPCs by element type (+none)
+                            foreach (GameObject npc in npcs)
+                            {
+                                if (npc.transform.GetComponent<SCR_NPC>().npcData.elementType==elementType.None || npc.transform.GetComponent<SCR_NPC>().npcData.elementType == npcElement)
+                                {
+                                    filter1.Add(npc);
+                                }
+                            }
+                            //Filter NPCs by difficulty
+                            foreach (GameObject npc in filter1)
+                            {
+                                switch (row+col)
+                                {
+                                    case int n when n < (cols+rows)/3:
+                                        if (npc.transform.GetComponent<SCR_NPC>().npcData.difficulty == difficultyType.Easy)
+                                            filter2.Add(npc);
+                                        break;
+                                    case int n when n < (cols + rows) * 2 / 3:
+                                        if (npc.transform.GetComponent<SCR_NPC>().npcData.difficulty == difficultyType.Medium)
+                                            filter2.Add(npc);
+                                        break;
+                                    default:
+                                        if (npc.transform.GetComponent<SCR_NPC>().npcData.difficulty == difficultyType.Hard)
+                                            filter2.Add(npc);
+                                        break;
+                                }
+                            }
+                            if (filter2.Count != 0)
+                            {
+                                GameObject NPC = filter2[Random.Range(0, filter2.Count)];
+                                GameObject thisNPC = GameObject.Instantiate(NPC, position, Quaternion.identity);
+                                thisNPC.transform.SetParent(npcContainer.transform);
+                                thisNPC.name = NPC.name;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -180,7 +256,7 @@ public class SCR_FloorGeneration : MonoBehaviour
         {
             for (int col = 0; col < cols; col++)
             {
-                if (Random.Range(0f, 1f) <= EventThreshold)
+                if (Random.Range(0f, 1f) <= EventThreshold && !(col == 0 && row == 0))
                 {
                     bool isPositionTaken = true;
                     //spawn random Event on random position within room
@@ -214,6 +290,65 @@ public class SCR_FloorGeneration : MonoBehaviour
         }
     }
 
+    private int EventsWeightedRandomIndex(List<GameObject> events)
+    {
+        int weightSum = 0;
+        for (int i = 0; i < events.Count; i++)
+        {
+            SO_Events eventSO = events[i].GetComponent<SCR_Events>().thisEvent;
+            weightSum += eventSO.probabilityWeight;
+        }
+        float rand = Random.value;
+        float s = 0f;
+        for (int i = 0; i < events.Count; i++)
+        {
+            SO_Events eventSO = events[i].GetComponent<SCR_Events>().thisEvent;
+            s += eventSO.probabilityWeight / (float)weightSum;
+            if (s >= rand)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private elementType NPCWeightedRandomElement(int[] elemWeights)
+    {
+        int weightSum = 0;
+        for (int i = 0; i < elemWeights.Length; i++)
+        {
+            weightSum = elemWeights[i];
+        }
+        float rand = Random.value;
+        float s = 0f;
+        for (int i = 0; i < elemWeights.Length; i++)
+        {
+            s += elemWeights[i] / (float)weightSum;
+            if (s >= rand)
+            {
+                switch (i)
+                {
+                    case 0:
+                        return elementType.Earth;
+                    case 1:
+                        return elementType.Water;
+                    case 2:
+                        return elementType.Fire;
+                    case 3:
+                        return elementType.Air;
+                    case 4:
+                        return elementType.Divination;
+                    case 5:
+                        return elementType.Illusion;
+                    case 6:
+                        return elementType.Life;
+                    default:
+                        break;
+                }
+            }
+        }
+        return elementType.None;
+    }
     #endregion
 
     #region Cave System
@@ -323,26 +458,4 @@ public class SCR_FloorGeneration : MonoBehaviour
         }
     }
     #endregion
-
-    private int EventsWeightedRandomIndex(List<GameObject> events)
-    {
-        int weightSum = 0;
-        for (int i = 0; i < events.Count; i++)
-        {
-            SO_Events eventSO = events[i].GetComponent<SCR_Events>().thisEvent;
-            weightSum += eventSO.probabilityWeight;
-        }
-        float rand = Random.value;
-        float s = 0f;
-        for (int i = 0; i < events.Count; i++)
-        {
-            SO_Events eventSO = events[i].GetComponent<SCR_Events>().thisEvent;
-            s += eventSO.probabilityWeight / (float)weightSum;
-            if (s >= rand)
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
 }
