@@ -159,7 +159,7 @@ public class SCR_FloorGeneration : MonoBehaviour
                 List<GameObject> filter1 = new List<GameObject>();
                 List<GameObject> filter2 = new List<GameObject>();
 
-                if (Random.Range(0f, 1f) <= NPCThreshold && !(col==0 && row==0))
+                if (Random.Range(0f, 1f) <= NPCThreshold && !(col==0 && row==0) && !(col == cols-1 && row == rows-1))
                 {
                     bool isPositionTaken = true;
                     //spawn random Event on random position within room
@@ -256,7 +256,7 @@ public class SCR_FloorGeneration : MonoBehaviour
         {
             for (int col = 0; col < cols; col++)
             {
-                if (Random.Range(0f, 1f) <= EventThreshold && !(col == 0 && row == 0))
+                if (Random.Range(0f, 1f) <= EventThreshold && !(col == 0 && row == 0) && !(col == cols - 1 && row == rows - 1))
                 {
                     bool isPositionTaken = true;
                     //spawn random Event on random position within room
@@ -288,6 +288,11 @@ public class SCR_FloorGeneration : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void BBEGSpawner()
+    {
+        //TO BE DEFINED
     }
 
     private int EventsWeightedRandomIndex(List<GameObject> events)

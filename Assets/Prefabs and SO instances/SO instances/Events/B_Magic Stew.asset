@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ef98f0e52b1158438e00ef036b585ea, type: 3}
-  m_Name: GenericEvent2
+  m_Name: B_Magic Stew
   m_EditorClassIdentifier: 
-  eventType: 1
-  probabilityWeight: 5
+  eventType: 14
+  probabilityWeight: 1
+  stability: 0

@@ -13,6 +13,7 @@ public class SCR_Player : MonoBehaviour
     private float prevDirection = 1f;
     #endregion
     #region  Player Resources
+    public PlayerClasses playerClass;
     public elementType[] infusionslots;
     public int numberOfTorches;
     public int numberOfWillpower;
@@ -187,4 +188,16 @@ public class SCR_Player : MonoBehaviour
             }
         }
     }
+
+}
+
+public enum PlayerClasses
+{
+    Shaman,
+    Mage,
+    Sorceress,
+    Thaumaturge,
+    Seer,
+    Warlock,
+    Druid
 }

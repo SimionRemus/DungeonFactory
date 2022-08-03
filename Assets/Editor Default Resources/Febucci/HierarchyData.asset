@@ -24,7 +24,7 @@ MonoBehaviour:
     prefabs: []
   alternatingBackground:
     enabled: 1
-    color: {r: 0, g: 0.4716981, b: 0.0680802, a: 0.39215687}
+    color: {r: 0, g: 1, b: 0.14166665, a: 0.19607843}
   separator:
     enabled: 1
     startString: =

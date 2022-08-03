@@ -9,6 +9,7 @@ public class SO_Events : ScriptableObject
 {
     public TileEventTypes eventType;
     public int probabilityWeight;
+    public EventStability stability;
 
     public void DoEffect()
     {
@@ -16,9 +17,30 @@ public class SO_Events : ScriptableObject
     }
 }
 
+public enum EventStability
+{
+    Stable,
+    Unstable,
+    Volatile
+}
 
 public enum TileEventTypes
 {
-    GenericEvent1,
-    GenericEvent2
+    AlterEgo,
+    ShopLifter,
+    ApothecaryVisit,
+    MagicumLaude,
+    ElementalAffinity,
+    Overmind,
+    ThinkingWithGateways,
+    ItsMySweat,
+    AndBlood,
+    Goldfish,
+    DarkBlood,
+    Dizziness,
+    Eraser,
+    TheNoctisReaper,
+    MagicStew,
+    WetMatches,
+    ElementalDissonance
 }
