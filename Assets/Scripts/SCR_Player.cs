@@ -117,7 +117,7 @@ public class SCR_Player : MonoBehaviour
         {
 
             transform.Rotate(new Vector3(0, 1, 0), 180 * System.Convert.ToInt32(Input.GetAxisRaw("Horizontal") != prevDirection));
-            if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), 0.1f,1024))
+            if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), 0.1f, 1792))
             {
                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
             }
@@ -125,7 +125,7 @@ public class SCR_Player : MonoBehaviour
         }
         if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
         {
-            if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), 0.1f, 1024))
+            if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), 0.1f, 1792))
             {
                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
             }

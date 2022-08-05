@@ -13,6 +13,7 @@ public class SO_NPC : ScriptableObject
     public NPCtypes npcType;
     public elementType elementType;
     public difficultyType difficulty;
+    public List<Vector2Int> movement;
 }
 
 

@@ -7019,7 +7019,7 @@ GameObject:
   - component: {fileID: 956839888}
   - component: {fileID: 956839889}
   - component: {fileID: 956839890}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -7060,6 +7060,7 @@ MonoBehaviour:
   whatStopsMovement:
     serializedVersion: 2
     m_Bits: 1024
+  playerClass: 0
   infusionslots: 03000000030000000300000000000000000000000000000000000000
   numberOfTorches: 0
   numberOfWillpower: 0
@@ -7961,7 +7962,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1133793530}
   - component: {fileID: 1133793531}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PlayerSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

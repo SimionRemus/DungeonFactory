@@ -15,7 +15,7 @@ public class SCR_FloorGeneration : MonoBehaviour
     [SerializeField] private GameObject npcContainer;
     public int gameSeed;
 
-    private int cellSize = 5;
+    public int cellSize = 5;
     public int rows; //each cell is cellSize x cellSize so multiply this for floor generation
     public int cols; //each cell is cellSize x cellSize so multiply this for floor generation
 

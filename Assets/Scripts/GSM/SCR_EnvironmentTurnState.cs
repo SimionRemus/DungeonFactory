@@ -7,7 +7,8 @@ public class SCR_EnvironmentTurnState : IState
     //Write attributes/properties here
     private SCR_GameSM stateMachine;
 
-
+    private GameObject enemyContainer;
+    private GameObject aggroTarget;
     /// <summary>
     /// Constructor of state. Passes needed parameters into the state.
     /// </summary>
@@ -18,7 +19,6 @@ public class SCR_EnvironmentTurnState : IState
 
     void IState.OnEnter()
     {
-        Debug.Log("Environment turn started");
         stateMachine.player.GetComponent<SCR_Player>().UpdateWillpower();
         stateMachine.player.GetComponent<SCR_Player>().UpdateTorches();
         stateMachine.player.GetComponent<SCR_Player>().UpdateHitpoints();
@@ -27,17 +27,37 @@ public class SCR_EnvironmentTurnState : IState
         stateMachine.player.GetComponent<SCR_Player>().numberOfTorchesModifier = 0;
 
         stateMachine.grid.transform.GetComponent<SCR_FloorGeneration>().ToggleDoors();
+        enemyContainer = GameObject.Find("EnemyContainer");
     }
 
     void IState.OnExit()
     {
-        Debug.Log("Environment turn ended");
     }
     
 
     void IState.OnUpdate()
     {
-        Debug.Log("Doing environ stuff here");
+        DoActionAllNPCs();
         stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
+    }
+
+    //private void MoveAllNPCs()
+    //{
+    //    Transform enemy;
+    //    for (int i = 0; i < enemyContainer.transform.childCount; i++)
+    //    {
+    //        enemy = enemyContainer.transform.GetChild(i);
+    //        enemy.GetComponent<SCR_NPC>().MoveNPC();
+    //    }
+    //}
+
+    private void DoActionAllNPCs()
+    {
+        Transform enemy;
+        for (int i = 0; i < enemyContainer.transform.childCount; i++)
+        {
+            enemy = enemyContainer.transform.GetChild(i);
+            enemy.GetComponent<SCR_NPC>().DoNPCAction();
+        }
     }
 }
