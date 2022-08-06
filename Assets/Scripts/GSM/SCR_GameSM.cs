@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 public class SCR_GameSM : MonoBehaviour
 {
     public IState currentState;
+    public IState previousState;
     bool intransition = false;
     public bool WINCONDITION = false;
     public bool LOSECONDITION = false;
@@ -79,7 +80,8 @@ public class SCR_GameSM : MonoBehaviour
 
         if (currentState != null)
             currentState.OnExit();
-        
+
+        previousState = currentState;
         currentState = newState;
 
         if (currentState != null)
@@ -92,6 +94,11 @@ public class SCR_GameSM : MonoBehaviour
     {
         if(currentState!=null && !intransition)
             currentState.OnUpdate();
+    }
+
+    public void GoToMainMenu()
+    {
+        ChangeState(MainMenuState);
     }
 
 }

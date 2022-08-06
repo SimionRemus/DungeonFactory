@@ -32,6 +32,7 @@ public class SCR_Player : MonoBehaviour
     #region UI stuff
     [SerializeField] Image[] Elements;
     [SerializeField] Sprite[] elementSprites;
+    [SerializeField] GameObject manager;
 
     #endregion
 
@@ -52,6 +53,12 @@ public class SCR_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            bool toggleSettings =manager.transform.GetComponent<SCR_GameSM>().SettingsUI.enabled;
+            manager.transform.GetComponent<SCR_GameSM>().SettingsUI.enabled = !toggleSettings;
+            manager.transform.GetComponent<SCR_GameSM>().SettingsUI.transform.Find("QuitToMain").gameObject.SetActive(!toggleSettings);
+        }
 
         SetCamera();
         UpdateUI();
