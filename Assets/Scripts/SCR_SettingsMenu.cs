@@ -35,7 +35,6 @@ public class SCR_SettingsMenu : MonoBehaviour
 
     public void SetMasterVolume(float volume)
     {
-        Debug.Log(volume);
         mixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
     }
 

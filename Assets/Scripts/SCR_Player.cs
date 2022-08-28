@@ -15,9 +15,12 @@ public class SCR_Player : MonoBehaviour
     #region  Player Resources
     public PlayerClasses playerClass;
     public elementType[] infusionslots;
+    public int[] takenSpells;
+    public int takenSpellsIndex;
     public int numberOfTorches;
     public int numberOfWillpower;
     public int numberOfHitpoints;
+    private int maxNumberOfHitpoints;
     public int baseNumberOfWillpower;
     public int numberOfTorchesModifier;
     public int numberOfWillpowerModifier;
@@ -39,15 +42,27 @@ public class SCR_Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        takenSpells = new int[30];
+        takenSpellsIndex = 0;
+        maxNumberOfHitpoints = 100;
+        numberOfHitpoints = maxNumberOfHitpoints;
+        ResetPlayerState();
+    }
+
+    public void ResetPlayerState()
+    {
         movePoint.parent = null;
         infusionslots = new elementType[7];
-        numberOfHitpoints = 100;
+        maxNumberOfHitpoints = 100;
+        numberOfHitpoints = maxNumberOfHitpoints;
         numberOfTorches = 30;
         numberOfWillpower = 3;
         baseNumberOfWillpower = 3;
         numberOfHitpointsModifier = 0;
         numberOfTorchesModifier = 0;
         numberOfWillpowerModifier = 0;
+        movePoint.position = new Vector3(3.5f, 3.5f, 0f);
+        gameObject.transform.position = new Vector3(3.5f, 3.5f, 0f);
     }
 
     // Update is called once per frame
@@ -194,6 +209,26 @@ public class SCR_Player : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void AffectHitpoints(int ammount)
+    {
+        if (numberOfHitpoints + ammount > maxNumberOfHitpoints)
+        {
+            numberOfHitpoints = maxNumberOfHitpoints;
+        }
+        else
+        {
+            if (numberOfHitpoints + ammount < 0)
+                numberOfHitpoints = 0;
+            else
+                numberOfHitpoints += ammount;
+        }
+    }
+
+    public void ApplyEffects()
+    {
+
     }
 
 }

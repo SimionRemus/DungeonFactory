@@ -91,10 +91,10 @@ public class SCR_CastSpellState : IState
                 
                 Vector3 midpoint = groundTilemap.CellToWorld(tilePos) + new Vector3(0.5f, 0.5f, 0);
                 Collider2D collider = Physics2D.OverlapCircle(midpoint, 0.45f);
-                if (collider)
-                {
-                    AffectUnitOnTile(collider.gameObject);
-                }
+                //if (collider)
+                //{
+                //    AffectUnitOnTile(collider.gameObject);
+                //}
                 SpellEnvironmentalEffect(selectedCard, tilePos);
                 bool didSpellWork = selectedCard.GetComponent<SCR_CardInfoDisplay>().SpellCard.DoSpellEffects(stateMachine.player, groundTilemap, stateMachine, tilePos, collider);
                 var movepoint = GameObject.Find("Movepoint").transform.position;
@@ -454,11 +454,6 @@ public class SCR_CastSpellState : IState
         }
     }
 
-    private void AffectUnitOnTile(GameObject gObject)
-    {
-        Debug.Log(gObject.name);
-    }
-
     private bool HasTheComponents()
     {
         elementType[] infusionSlots = stateMachine.player.GetComponent<SCR_Player>().infusionslots;
@@ -466,7 +461,6 @@ public class SCR_CastSpellState : IState
         int mandatoryNumberOfSlots = 0;
         for (int i = 0; i < infusionSlots.Length; i++)
         {
-            Debug.Log(infusionSlots[i]);
             if (spellCard.mandatoryElement == infusionSlots[i])
             {
                 mandatoryNumberOfSlots++;
@@ -488,6 +482,5 @@ public class SCR_CastSpellState : IState
         GameObject tileEffectGO = GameObject.Instantiate(target, pos + new Vector3(0.5f, 0.5f), Quaternion.identity);
         tileEffectGO.SetActive(true);
         tileEffectGO.transform.SetParent(GameObject.Find("TileEffectContainer").transform);
-        Debug.Log("CAST SPELL with effect");
     }
 }

@@ -11,6 +11,7 @@ public class SCR_NPC : MonoBehaviour
     private int rows, cols;
     private Vector3 currentPosition;
     private float maxAttackDistance; //to be defined
+    public int actualHP;
 
     // Start is called before the first frame update
     void Start()
@@ -20,21 +21,17 @@ public class SCR_NPC : MonoBehaviour
         rows = grid.GetComponent<SCR_FloorGeneration>().rows;
         cols = grid.GetComponent<SCR_FloorGeneration>().cols;
         currentPosition = gameObject.transform.position;
+        actualHP = npcData.HP;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(npcData.HP<=0)
+        if(actualHP <= 0)
         {
             //NPC DIES
             GameObject.Destroy(this.gameObject);
         }
-
-    }
-
-    public void ApplyEffects()
-    {
 
     }
 
@@ -45,7 +42,7 @@ public class SCR_NPC : MonoBehaviour
             if (aggroTarget == null)
             {
                 Vector2Int newPos = npcData.movement[Random.Range(0, npcData.movement.Count)];
-                if (!Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(newPos.x, newPos.y, 0), 0.1f, 3840))
+                if (!Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(newPos.x, newPos.y, 0), 1.1f, 3840))
                 {
                     gameObject.transform.position += new Vector3(newPos.x, newPos.y, 0);
                 }
@@ -56,7 +53,7 @@ public class SCR_NPC : MonoBehaviour
                 int mini = 1000;
                 for (int i = 0; i < npcData.movement.Count; i++)
                 {
-                    if (Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position) < min)
+                    if (Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position) < min && Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position)>0)
                     {
                         min = Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position);
                         mini = i;
@@ -87,6 +84,8 @@ public class SCR_NPC : MonoBehaviour
             colliders=Physics2D.OverlapBoxAll(colliderBoxPosition, colliderBoxSize, 0, layerMask);
             if (colliders.Length!=0)
             {
+                Debug.Log(colliders[Random.Range(0, colliders.Length)].gameObject.transform.position);
+                Debug.Log(colliderBoxPosition);
                 return colliders[Random.Range(0, colliders.Length)].gameObject;
             }
         }
@@ -98,6 +97,7 @@ public class SCR_NPC : MonoBehaviour
                 colliders = Physics2D.OverlapBoxAll(currentPosition, colliderBoxSize, 0, layerMask);
                 if (colliders.Length != 0)
                 {
+                    Debug.Log(colliders[Random.Range(0, colliders.Length)].gameObject.transform.position);
                     return colliders[Random.Range(0, colliders.Length)].gameObject;
                 }
             }
@@ -107,6 +107,7 @@ public class SCR_NPC : MonoBehaviour
                 colliders = Physics2D.OverlapBoxAll(currentPosition, colliderBoxSize, 0, layerMask);
                 if (colliders.Length != 0)
                 {
+                    Debug.Log(colliders[Random.Range(0, colliders.Length)].gameObject.transform.position);
                     return colliders[Random.Range(0, colliders.Length)].gameObject;
                 }
             }
@@ -125,7 +126,7 @@ public class SCR_NPC : MonoBehaviour
             {
                 if(Vector3.Distance(gameObject.transform.position,aggroTarget.transform.position)<= maxAttackDistance)
                 {
-                    //Attack()
+                    aggroTarget.GetComponent<SCR_Player>().AffectHitpoints(-10);
                 }
             }
         }
@@ -134,14 +135,14 @@ public class SCR_NPC : MonoBehaviour
             //If aggroTarget can be attacked : attack
             if (Vector3.Distance(gameObject.transform.position, aggroTarget.transform.position) <= maxAttackDistance)
             {
-                //Attack()
+                aggroTarget.GetComponent<SCR_Player>().AffectHitpoints(-10);
             }
             else
             {
                 MoveNPC(aggroTarget);
                 if (Vector3.Distance(gameObject.transform.position, aggroTarget.transform.position) <= maxAttackDistance)
                 {
-                    //Attack()
+                    aggroTarget.GetComponent<SCR_Player>().AffectHitpoints(-10);
                 }
             }
         }
@@ -149,16 +150,21 @@ public class SCR_NPC : MonoBehaviour
 
     public void AffectHitpoints(int ammount)
     {
-        if (npcData.HP + ammount > npcData.HPMax)
+        if (actualHP + ammount > npcData.HPMax)
         {
-            npcData.HP = npcData.HPMax;
+            actualHP = npcData.HPMax;
         }
         else
         {
-            if (npcData.HP + ammount < 0)
-                npcData.HP = 0;
+            if (actualHP + ammount < 0)
+                actualHP = 0;
             else
-                npcData.HP += ammount;
+                actualHP += ammount;
         }
+    }
+
+    public void ApplyEffects()
+    {
+
     }
 }

@@ -33,6 +33,7 @@ public class SCR_PlayerTurnIdleState : IState
         stateMachine.CardDetailsUI.enabled = false;
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = false;
+        stateMachine.ClassSelection.enabled = false;
 
         groundTilemap = stateMachine.grid.transform.Find("GroundTilemap").GetComponent<Tilemap>();
         spellRangePositions = new Vector2Int[25];
@@ -56,8 +57,9 @@ public class SCR_PlayerTurnIdleState : IState
         stateMachine.CardDetailsUI.enabled = false;
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = false;
+        stateMachine.ClassSelection.enabled = false;
 
-        
+
         endTurn.onClick.RemoveListener(EndTurnClicked);
         spellbook.onClick.RemoveListener(SpellbookClicked);
     }

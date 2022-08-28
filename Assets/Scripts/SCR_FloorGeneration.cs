@@ -13,6 +13,7 @@ public class SCR_FloorGeneration : MonoBehaviour
     [SerializeField] private GameObject manager;
     [SerializeField] private GameObject eventContainer;
     [SerializeField] private GameObject npcContainer;
+    [SerializeField] private GameObject tileEffectContainer;
     public int gameSeed;
 
     public int cellSize = 5;
@@ -34,10 +35,21 @@ public class SCR_FloorGeneration : MonoBehaviour
     private float NPCThreshold = 0.7f;
     private float EventThreshold = 0.2f;
 
-    // Start is called before the first frame update
-    void Start()
+    public void GenerateWorld()
     {
-        if(gameSeed!=0)
+        for (int i = eventContainer.transform.childCount-1; i >=0; i--)
+        {
+            GameObject.Destroy(eventContainer.transform.GetChild(i).gameObject);
+        }
+        for (int i = npcContainer.transform.childCount - 1; i >= 0; i--)
+        {
+            GameObject.Destroy(npcContainer.transform.GetChild(i).gameObject);
+        }
+        for (int i = tileEffectContainer.transform.childCount - 1; i >= 0; i--)
+        {
+            GameObject.Destroy(tileEffectContainer.transform.GetChild(i).gameObject);
+        }
+        if (gameSeed != 0)
         {
             Random.InitState(gameSeed);
         }

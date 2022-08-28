@@ -25,6 +25,8 @@ public class SCR_IntroCinematicState : IState
         stateMachine.CardDetailsUI.enabled = false;
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = true;
+
+        
     }
 
     void IState.OnExit()
@@ -35,12 +37,16 @@ public class SCR_IntroCinematicState : IState
         stateMachine.CardDetailsUI.enabled = false;
         stateMachine.CreditsUI.enabled = false;
         stateMachine.IntroCinematics.enabled = false;
+
+        //GENERATE NEW GAME HERE (generate floor, events, monsters, etc; reset position, element infusions, spells, torches, etc for PC; etc)
+        stateMachine.grid.GetComponent<SCR_FloorGeneration>().GenerateWorld();
+        stateMachine.player.GetComponent<SCR_Player>().ResetPlayerState();
     }
 
     void IState.OnUpdate()
     {
         //running cinematic video then going into new game
-        stateMachine.ChangeState(stateMachine.PlayerTurnIdleState);
+        stateMachine.ChangeState(stateMachine.SelectPCClass);
 
     }
 }

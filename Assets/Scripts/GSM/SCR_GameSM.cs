@@ -7,7 +7,6 @@ using UnityEngine.Tilemaps;
 public class SCR_GameSM : MonoBehaviour
 {
     public IState currentState;
-    public IState previousState;
     bool intransition = false;
     public bool WINCONDITION = false;
     public bool LOSECONDITION = false;
@@ -31,6 +30,7 @@ public class SCR_GameSM : MonoBehaviour
     public SCR_VictoryState VictoryState;
     public SCR_SpellBookSwapState SpellbookSwapState;
     public SCR_NewSpellState NewSpellState;
+    public SCR_SelectPCClass SelectPCClass;
     #endregion
 
     [SerializeField] public Canvas MainMenuUI;
@@ -39,6 +39,7 @@ public class SCR_GameSM : MonoBehaviour
     [SerializeField] public Canvas CardDetailsUI;
     [SerializeField] public Canvas CreditsUI;
     [SerializeField] public Canvas IntroCinematics;
+    [SerializeField] public Canvas ClassSelection;
 
     [SerializeField] public Grid grid;
     [SerializeField] public GameObject player;
@@ -63,6 +64,7 @@ public class SCR_GameSM : MonoBehaviour
         VictoryState = new SCR_VictoryState(this);
         SpellbookSwapState = new SCR_SpellBookSwapState(this);
         NewSpellState = new SCR_NewSpellState(this);
+        SelectPCClass = new SCR_SelectPCClass(this);
         #endregion
         ChangeState(MainMenuState);
     }
@@ -81,7 +83,6 @@ public class SCR_GameSM : MonoBehaviour
         if (currentState != null)
             currentState.OnExit();
 
-        previousState = currentState;
         currentState = newState;
 
         if (currentState != null)

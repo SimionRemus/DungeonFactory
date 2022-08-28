@@ -70,7 +70,7 @@ public class SO_Spell : ScriptableObject
                         {
                             player.GetComponent<SCR_Player>().numberOfTorches--;
                         }
-                        npc.AffectHitpoints(10);
+                        npc.AffectHitpoints(-10);
                         return true;
                     }
                     return false;
@@ -106,6 +106,7 @@ public enum elementType
 
 public enum SpellList
 {
+    #region none
     None,
     MoveNEWS2,
     MoveNEWS3,
@@ -117,8 +118,50 @@ public enum SpellList
     MoveChessHorse,
     HitWithTorch,
     Meditate,
-    Premonition,
+    #endregion
+    #region Earth
+    StoneSkin,
+    CreateWall,
+    MountainMight,
+    AntimagicDome,
+    Quicksand,
+    Earthquake,
+    CrystallineSpikes,
+    PhilosopherStone,
+    IAmAdam,
+    Petrify,
+    #endregion
+    #region Water
+    #endregion
+    #region Fire
     EternalTorch,
-
-
+    #endregion
+    #region Air
+    #endregion
+    #region Divination
+    Premonition,
+    Foresight,
+    DetectThoughts,
+    SeeInvisibility,
+    SwapSpace,
+    Blink,
+    TimeLoop,
+    Feedback,
+    Warp,
+    Continuum,
+    #endregion
+    #region Illusion
+    Balance,
+    Phantasm,
+    Pacify,
+    Cage,
+    Invisible,
+    Imperceptible,
+    YouAreMe,
+    DrainBamage,
+    Fear,
+    SchizoFrenzy,
+    #endregion
+    #region Life
+    #endregion
 }
