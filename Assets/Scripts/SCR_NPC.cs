@@ -10,7 +10,7 @@ public class SCR_NPC : MonoBehaviour
     private int cellSize;
     private int rows, cols;
     private Vector3 currentPosition;
-    private float maxAttackDistance; //to be defined
+    private float maxAttackDistance; //to be defined in SO
     public int actualHP;
 
     // Start is called before the first frame update
@@ -22,6 +22,7 @@ public class SCR_NPC : MonoBehaviour
         cols = grid.GetComponent<SCR_FloorGeneration>().cols;
         currentPosition = gameObject.transform.position;
         actualHP = npcData.HP;
+        maxAttackDistance=1.0f;
     }
 
     // Update is called once per frame
@@ -37,12 +38,13 @@ public class SCR_NPC : MonoBehaviour
 
     public void MoveNPC(GameObject aggroTarget)
     {
+        int layerMask = 3840;
         if (npcData.movement.Count!=0)
         {
             if (aggroTarget == null)
             {
                 Vector2Int newPos = npcData.movement[Random.Range(0, npcData.movement.Count)];
-                if (!Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(newPos.x, newPos.y, 0), 1.1f, 3840))
+                if (!Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(newPos.x, newPos.y, 0), 0.01f, layerMask))
                 {
                     gameObject.transform.position += new Vector3(newPos.x, newPos.y, 0);
                 }
@@ -53,7 +55,7 @@ public class SCR_NPC : MonoBehaviour
                 int mini = 1000;
                 for (int i = 0; i < npcData.movement.Count; i++)
                 {
-                    if (Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position) < min && Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position)>0)
+                    if (Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position) < min && Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position)>maxAttackDistance)
                     {
                         min = Vector3.Distance(gameObject.transform.position + new Vector3(npcData.movement[i].x, npcData.movement[i].y, 0), aggroTarget.transform.position);
                         mini = i;
@@ -62,10 +64,12 @@ public class SCR_NPC : MonoBehaviour
                 if (mini != 1000)
                 {
                     Vector2Int newPos = npcData.movement[mini];
-                    gameObject.transform.position += new Vector3(newPos.x, newPos.y, 0);
+                    if (!Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(newPos.x, newPos.y, 0), 0.01f, layerMask))
+                    {
+                        gameObject.transform.position += new Vector3(newPos.x, newPos.y, 0);
+                    }
                 }
-            }
-            
+            } 
         }
     }
 
@@ -84,9 +88,8 @@ public class SCR_NPC : MonoBehaviour
             colliders=Physics2D.OverlapBoxAll(colliderBoxPosition, colliderBoxSize, 0, layerMask);
             if (colliders.Length!=0)
             {
-                Debug.Log(colliders[Random.Range(0, colliders.Length)].gameObject.transform.position);
-                Debug.Log(colliderBoxPosition);
-                return colliders[Random.Range(0, colliders.Length)].gameObject;
+                GameObject aggroTarget=colliders[Random.Range(0, colliders.Length)].gameObject;
+                return aggroTarget;
             }
         }
         else
@@ -97,7 +100,6 @@ public class SCR_NPC : MonoBehaviour
                 colliders = Physics2D.OverlapBoxAll(currentPosition, colliderBoxSize, 0, layerMask);
                 if (colliders.Length != 0)
                 {
-                    Debug.Log(colliders[Random.Range(0, colliders.Length)].gameObject.transform.position);
                     return colliders[Random.Range(0, colliders.Length)].gameObject;
                 }
             }
@@ -107,7 +109,6 @@ public class SCR_NPC : MonoBehaviour
                 colliders = Physics2D.OverlapBoxAll(currentPosition, colliderBoxSize, 0, layerMask);
                 if (colliders.Length != 0)
                 {
-                    Debug.Log(colliders[Random.Range(0, colliders.Length)].gameObject.transform.position);
                     return colliders[Random.Range(0, colliders.Length)].gameObject;
                 }
             }
@@ -127,6 +128,10 @@ public class SCR_NPC : MonoBehaviour
                 if(Vector3.Distance(gameObject.transform.position,aggroTarget.transform.position)<= maxAttackDistance)
                 {
                     aggroTarget.GetComponent<SCR_Player>().AffectHitpoints(-10);
+                    Debug.Log("Just aggroed and attacked after random move");
+                }
+                else{
+                    Debug.Log("Just moved randomly");
                 }
             }
         }
@@ -135,13 +140,16 @@ public class SCR_NPC : MonoBehaviour
             //If aggroTarget can be attacked : attack
             if (Vector3.Distance(gameObject.transform.position, aggroTarget.transform.position) <= maxAttackDistance)
             {
+                Debug.Log("Already aggro, i can attack!");
                 aggroTarget.GetComponent<SCR_Player>().AffectHitpoints(-10);
             }
             else
             {
+                Debug.Log("Already aggro, moving towards target");
                 MoveNPC(aggroTarget);
                 if (Vector3.Distance(gameObject.transform.position, aggroTarget.transform.position) <= maxAttackDistance)
                 {
+                    Debug.Log("Agroed, moved towards target and attacking!");
                     aggroTarget.GetComponent<SCR_Player>().AffectHitpoints(-10);
                 }
             }
